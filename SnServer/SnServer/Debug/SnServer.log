@@ -1,0 +1,141 @@
+﻿  stdafx.cpp
+e:\ubuntu14\include\time.h(75): error C2371: “time_t”: 重定义；不同的基类型
+  d:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\corecrt.h(489): note: 参见“time_t”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cstdlib(41): error C2039: “at_quick_exit”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cstdlib(41): error C2873: “at_quick_exit”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cstdlib(41): error C2039: “quick_exit”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cstdlib(41): error C2873: “quick_exit”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(92): error C2375: “ceil”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(178): note: 参见“ceil”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(99): error C2375: “floor”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(184): note: 参见“floor”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(101): error C2375: “frexp”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(103): note: 参见“frexp”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(102): error C2375: “ldexp”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(106): note: 参见“ldexp”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(179): error C2375: “acosh”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(88): note: 参见“acosh”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(180): error C2375: “asinh”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(90): note: 参见“asinh”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(181): error C2375: “atanh”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(92): note: 参见“atanh”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(182): error C2375: “cbrt”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(169): note: 参见“cbrt”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(183): error C2375: “copysign”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(217): note: 参见“copysign”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(184): error C2375: “erf”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(249): note: 参见“erf”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(185): error C2375: “erfc”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(250): note: 参见“erfc”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(186): error C2375: “expm1”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(128): note: 参见“expm1”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(187): error C2375: “exp2”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(141): note: 参见“exp2”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(188): error C2375: “fdim”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(337): note: 参见“fdim”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(190): error C2375: “fmax”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(340): note: 参见“fmax”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(191): error C2375: “fmin”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(343): note: 参见“fmin”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(192): error C2375: “hypot”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(162): note: 参见“hypot”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(193): error C2375: “ilogb”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(296): note: 参见“ilogb”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(194): error C2375: “lgamma”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(251): note: 参见“lgamma”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(195): error C2375: “llrint”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(327): note: 参见“llrint”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(196): error C2375: “llround”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(333): note: 参见“llround”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(197): error C2375: “log1p”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(131): note: 参见“log1p”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(198): error C2375: “log2”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(144): note: 参见“log2”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(199): error C2375: “logb”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(134): note: 参见“logb”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(200): error C2375: “lrint”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(325): note: 参见“lrint”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(201): error C2375: “lround”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(331): note: 参见“lround”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(202): error C2375: “nearbyint”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(305): note: 参见“nearbyint”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(203): error C2375: “nextafter”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(282): note: 参见“nextafter”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(204): error C2375: “nexttoward”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(284): note: 参见“nexttoward”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(205): error C2375: “remainder”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(288): note: 参见“remainder”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(207): error C2375: “rint”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(279): note: 参见“rint”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(208): error C2375: “round”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(309): note: 参见“round”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(209): error C2375: “scalbln”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(301): note: 参见“scalbln”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(210): error C2375: “scalbn”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(292): note: 参见“scalbn”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(211): error C2375: “tgamma”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(258): note: 参见“tgamma”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\xtgmath.h(212): error C2375: “trunc”: 重定义；不同的链接
+  e:\ubuntu14\include\bits\mathcalls.h(313): note: 参见“trunc”的声明
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(723): error C2039: “fpclassify”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(723): error C2873: “fpclassify”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(723): error C2039: “signbit”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(723): error C2873: “signbit”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(724): error C2039: “isfinite”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(724): error C2873: “isfinite”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(725): error C2039: “isnormal”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(725): error C2873: “isnormal”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(726): error C2039: “isgreater”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(726): error C2873: “isgreater”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(726): error C2039: “isgreaterequal”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(726): error C2873: “isgreaterequal”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(727): error C2039: “isless”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(727): error C2873: “isless”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(727): error C2039: “islessequal”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(727): error C2873: “islessequal”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(728): error C2039: “islessgreater”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(728): error C2873: “islessgreater”: 符号不能用在 using 声明中
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(728): error C2039: “isunordered”: 不是“`global namespace'”的成员
+d:\program files (x86)\microsoft visual studio 14.0\vc\include\cmath(728): error C2873: “isunordered”: 符号不能用在 using 声明中
+e:\ubuntu14\include\wchar.h(61): error C2371: “wint_t”: 重定义；不同的基类型
+  d:\program files (x86)\windows kits\10\include\10.0.10240.0\ucrt\corecrt.h(449): note: 参见“wint_t”的声明
+e:\ubuntu14\include\libio.h(465): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\libio.h(467): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(372): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(377): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(380): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(391): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(413): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(472): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(479): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(484): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(510): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(512): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\stdio.h(515): error C2061: 语法错误: 标识符“__gnuc_va_list”
+e:\ubuntu14\include\string.h(77): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(77): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(79): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(79): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(217): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(217): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(219): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(219): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(244): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(244): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(246): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(246): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(296): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(296): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(298): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(298): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(323): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(323): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(325): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(325): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(470): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(470): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(472): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(472): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(498): error C2143: 语法错误: 缺少“;”(在“__asm”的前面)
+e:\ubuntu14\include\string.h(498): error C2059: 语法错误:“__asm”
+e:\ubuntu14\include\string.h(498): fatal error C1003: 错误计数超过 100；正在停止编译
