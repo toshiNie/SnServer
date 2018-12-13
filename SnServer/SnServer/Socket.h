@@ -21,7 +21,8 @@ struct Address
 class Socket
 {
 public:
-	Socket(int fd):fd_(fd) {}
+	Socket():fd_(::socket(AF_INET, SOCK_STREAM,0)) {}
+	Socket(int fd) :fd_(fd) {}
 	int GetSockFd()
 	{
 		return fd_;
@@ -38,13 +39,14 @@ public:
 	Socket Accept(Address& address)
 	{
 		socklen_t len = address.getAddrSize();
+
 		int fd=::accept(fd_, address.ToIpv4Addr(),&len);
 		return Socket(fd);
 	}
-	Socket Accept()
+	int Accept()
 	{
 		int fd = ::accept(fd_, NULL, NULL);
-		return Socket(fd);
+		return fd;
 	}
 	~Socket()
 	{
@@ -52,5 +54,4 @@ public:
 	}
 private:
 	int fd_;
-
 };

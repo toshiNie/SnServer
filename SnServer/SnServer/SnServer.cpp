@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "Time.h"
 #include "Log.h"
+#include"TcpServer.h"
 
 int main()
 {
@@ -12,6 +13,8 @@ int main()
 	NsLog &log = NsLog::Instance();
 	log.AddLog("hello","123",3);
 
+	EchoServer server;
+	server.run();
 
     return 0;
 }

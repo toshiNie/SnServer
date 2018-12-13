@@ -3,6 +3,7 @@
 template<typename T>
 class SafeQueue
 {
+public:
 	SafeQueue(size_t maxsize) :
 		maxSize_(maxsize),
 		mutex_(),
@@ -12,23 +13,34 @@ class SafeQueue
 	{
 
 	}
-	void push(T& x)
+	//void push(T& x)
+	//{
+	//	std::lock_guard<std::mutex> guard(mutex_);
+	//	while (isFullWithoutLock())
+	//	{
+	//		condNotFull_.wait();
+	//	}
+	//	queue_.push(x);
+	//	condNotEmpty_.notify_one();
+	//}
+
+	void push(T x)
 	{
-		std::lock_guard<std::mutex> guard(mutex_);
+		std::unique_lock<std::mutex> lck(mutex_);
 		while (isFullWithoutLock())
 		{
-			condNotFull_.wait();
+			condNotFull_.wait(lck);
 		}
 		queue_.push(x);
 		condNotEmpty_.notify_one();
-
 	}
+
 	T pop()
 	{
-		std::lock_guard<std::mutex> guard(mutex_);
+		std::unique_lock<std::mutex> lck(mutex_);
 		while (isEmptyWithoutLock())
 		{
-			condNotEmpty_.wait();
+			condNotEmpty_.wait(lck);
 		}
 		T temp(queue_.front());
 		queue_.pop();

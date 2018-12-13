@@ -2,11 +2,16 @@
 #include"stdafx.h"
 #include"EventHandle.h"
 #include"Epoll.h"
+
+class Reactor;
+typedef std::shared_ptr<Reactor> ReactorPtr;
 class Reactor
 {
 	typedef std::map<int, EventHandlerPtr> HandlerMap;
 public:
-	Reactor() :spNsEpoll_(NsEpollPtr(new NsEpoll))
+
+
+	Reactor() :spNsEpoll_(NsEpollPtr(new NsEpoll))	
 	{
 
 	}
@@ -21,6 +26,10 @@ public:
 		{
 			spNsEpoll_->AddEvent(spEventHandler->GetFd(),spEventHandler->GetHandlerType());
 			mapHandler_[spEventHandler->GetFd()] = spEventHandler;
+		}
+		else
+		{
+			LOG_INFO("fuck");
 		}
 	}
 	void Remove(EventHandlerPtr spEventHandler)
@@ -41,5 +50,5 @@ private:
 	HandlerMap mapHandler_;
 	NsEpollPtr spNsEpoll_;
 };
-typedef std::shared_ptr<Reactor> ReactorPtr;
+
 

@@ -34,3 +34,6 @@ public:
 private:
 	std::map<std::string, LogFilePtr> mapLogFile_;
 };
+
+//#define LOG_INFO(A)  NsLog::Instance().AddLog("info",A,strlen(A));
+#define LOG_INFO(A)  std::cout<<A<<std::endl;

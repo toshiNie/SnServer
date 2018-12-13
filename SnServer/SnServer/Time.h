@@ -19,7 +19,7 @@ public:
 
 		auto const msecs = milliseconds % 1000;
 		std::stringstream ss;
-		ss << std::put_time(std::localtime(&t), format);
+		//ss << std::put_time(std::localtime(&t), format);
 		return ss.str();
 	}
 	static std::string GetStrTimeStamp(const char* format = "%Y-%m-%d %H.%M.%S")

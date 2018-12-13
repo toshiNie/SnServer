@@ -22,6 +22,7 @@
 #include<thread>
 #include <mutex> 
 #include<queue>
+#include <condition_variable>
 
 //#ifdef WIN32
 //#include<winsock.h>
@@ -39,11 +40,5 @@
 //#endif // !WIN32
 
 
-
-
 #include <stdio.h>
-#include <tchar.h>
-
-
-
 // TODO:  在此处引用程序需要的其他头文件

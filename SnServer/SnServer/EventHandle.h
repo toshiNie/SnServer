@@ -1,8 +1,4 @@
 #pragma once
-#include"stdafx.h"
-#include"Reactor.h"
-#include"Socket.h"
-
 enum EventType
 {
 	ReadEvent = 0x01,
@@ -14,22 +10,21 @@ typedef unsigned int Event;
 class EventHandler: public std::enable_shared_from_this<EventHandler>
 {
 public:
-	virtual	~EventHandler() =0;
+	virtual	~EventHandler() {};
 	virtual void ReadHandle() = 0;
 	virtual void WriteHandle() = 0;
 	virtual void ErrorHandle() = 0;
-	virtual int GetFd() = 0;
 	virtual void SetHandlerType(Event type) { type_ = type; }
+	virtual int GetFd() {}
 	Event GetHandlerType() { return type_; };
 protected:
 	Event type_;
 };
 typedef std::shared_ptr<EventHandler> EventHandlerPtr;
 typedef std::shared_ptr<std::function<void(EventHandlerPtr)> > FuncHandlePtr;
-typedef std::shared_ptr<std::function<void(Socket&)> > FuncHandleListenPtr;
 
 
-class ListenHandler :public EventHandler
+/*class ListenHandler :public EventHandler
 {
 	
 public:
@@ -102,4 +97,4 @@ class WriteHandler :public EventHandler
 class ReadHandler :public EventHandler
 {
 
-};
+};*/
