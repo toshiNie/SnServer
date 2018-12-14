@@ -46,7 +46,12 @@ public:
 		socketutil::writen(sock_, (void*)writedBuffer_.getbuffer(), writedBuffer_.size());
 		writedBuffer_.reset();
 	}
-	virtual void ErrorHandle() {};
+	virtual void ErrorHandle()
+	{
+		LOG_INFO("error");
+		::close(sock_);
+		spReactor_->Remove(sock_);
+	};
 	virtual int GetFd() { return sock_; }
 
 private:
@@ -69,16 +74,62 @@ public:
 	virtual void ReadHandle()
 	{
 		LOG_INFO(__FUNCTION__);
-		std::vector<char> buffer(512);
-		size_t n = socketutil::readline(sock_, buffer.data(), 1024);
-		readBuffer_.append(buffer.data(), n);
-		EventHandlerPtr spHander(new EchoWriteHandler(sock_,readBuffer_));
-		spHander->SetHandlerType(WriteEvent);
-		ReactorPtr spReactor = Reactor::GetReactorPtr();
-		spReactor->AddHandler(spHander);
+		int r = 0;
+		while (true)
+		{
+			LOG_INFO("Loop");
+			std::vector<char> buffer(1025);
+			r = socketutil::readline(sock_, buffer.data(), 1024);
+			if (r < 0)
+			{
+				std::cout << "error:" << errno;
+				::close(sock_);
+				spReactor_->Remove(sock_);
+				return;
+			}
+			if (r == 0)
+			{
+				LOG_INFO("client disconnect");
+				readBuffer_.reset();
+				::close(sock_);
+				spReactor_->Remove(sock_);
+				return;
+			}
+			std::cout << "read size:" << r << std::endl;
+			if (r < 1024)
+			{
+				readBuffer_.append(buffer.data(), r);
+				break;
+			}
+			readBuffer_.append(buffer.data(), r - 1);
+		}
+		std::cout << readBuffer_.getbuffer() << std::endl;
+		//int w = 0;
+		//int w = socketutil::writen(sock_, (void*)readBuffer_.getbuffer(), readBuffer_.size());
+		//std::cout << "write size:" << w << std::endl;
+		//if (w < r)
+		//{
+		//	readBuffer_.consumHead(w);
+		//	EventHandlerPtr spHander(new EchoWriteHandler(sock_, readBuffer_));
+		//	spHander->SetHandlerType(WriteEvent);
+		//	ReactorPtr spReactor = Reactor::GetReactorPtr();
+		//	spReactor->AddHandler(spHander);
+		//}
+		//else
+		//{
+		//	readBuffer_.reset();
+		//	spReactor_->Mod(sock_, ReadEvent);
+		//}
+		//spReactor_->Mod(sock_, ReadEvent);
+		readBuffer_.reset();
 	}
-	virtual void WriteHandle() {};
-	virtual void ErrorHandle() {};
+	virtual void WriteHandle() { LOG_INFO("WRITE"); };
+	virtual void ErrorHandle() 
+	{
+		LOG_INFO("error");
+		::close(sock_);
+		spReactor_->Remove(sock_);
+	};
 	virtual int GetFd() { return sock_; }
 	
 private:
@@ -106,10 +157,12 @@ public:
 		listtenSocket_.Listen(1024);
 		LOG_INFO("listen OK");
 
-		pool_.PushPack(std::bind(&EchoServer::readThread, this));
-		pool_.Start(1);
+		for (int i = 0; i < 5; ++i)
+		{
+			pool_.PushPack(std::bind(&EchoServer::readThread, this));
+		}
 		pool_.PushPack(std::bind(&EchoServer::acceptThread,this));
-		pool_.Start(1);
+		pool_.Start();
 
 		while (pool_.isRunning())
 		{
@@ -151,5 +204,4 @@ private:
 	Socket listtenSocket_;
 	CThreadPool pool_;
 	std::vector<ReactorPtr> subReactors_;
-
 };

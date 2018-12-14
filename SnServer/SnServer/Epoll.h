@@ -17,7 +17,6 @@ public:
 		
 		std::vector<epoll_event> vecEvents(eventSize_);
 		int num = epoll_wait(epollFd_,vecEvents.data(), eventSize_,timeout);
-		//LOG_INFO(__FUNCTION__ + std::to_string(num)+ "  " + std::to_string(eventHandles.size()));
 		if (num > 0)
 		{
 			for (int i = 0; i < num; ++i)
@@ -60,9 +59,9 @@ public:
 			LOG_INFO("EPOLLOUT");
 			stEvt.events |= EPOLLOUT;
 		}
-		stEvt.events |= EPOLLET;
 		if (0 != epoll_ctl(epollFd_, EPOLL_CTL_ADD, handle, &stEvt))
 		{
+			LOG_INFO("add fail");
 
 		}
 		++eventSize_;
@@ -72,10 +71,33 @@ public:
 		struct epoll_event ev;
 		if (0 != epoll_ctl(epollFd_, EPOLL_CTL_DEL, handle, &ev))
 		{
+			LOG_INFO("del fail");
 			return false;
 		}
 		--eventSize_;
 		return 0;
+	}
+
+	bool Mod(int handle, Event event)
+	{
+		epoll_event stEvt;
+		stEvt.data.fd = handle;
+		if (event & EventType::ReadEvent)
+		{
+			LOG_INFO("EPOLLIN");
+			stEvt.events |= EPOLLIN;
+		}
+		if (event &EventType::WriteEvent)
+		{
+			LOG_INFO("EPOLLOUT");
+			stEvt.events |= EPOLLOUT;
+		}
+		if (0 != epoll_ctl(epollFd_, EPOLL_CTL_MOD, handle, &stEvt))
+		{
+			return false;
+		}
+		return true;
+
 	}
 private:
 	int eventSize_;;

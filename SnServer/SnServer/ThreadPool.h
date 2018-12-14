@@ -22,13 +22,12 @@ public:
 		}
 		isRunning_ = false;
 	}
-	void Start(int num)
+	void Start()
 	{
-		threadNumber_ = num;
 		isRunning_ = true;
-		for (int i = 0; i < num; i++)	
+		while (!waitTasks_.empty())
 		{
-			threads_.emplace_back(ThreadPtr(new std::thread(std::bind(&CThreadPool::RunInThread,this))));
+			threads_.emplace_back(ThreadPtr(new std::thread(std::bind(&CThreadPool::RunInThread, this))));
 		}
 	}
 	void PushPack(Task &&task)

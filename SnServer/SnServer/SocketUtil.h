@@ -101,7 +101,6 @@ namespace socketutil
 		{
 			if ((rc = read(sfd, &c, 1)) == 1)
 			{
-				std::cout <<" char: "<< c << std::endl;
 				*ptr++ = c;
 				if (c == '\n')
 					break;

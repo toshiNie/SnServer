@@ -32,15 +32,24 @@ public:
 			LOG_INFO("fuck");
 		}
 	}
-	void Remove(EventHandlerPtr spEventHandler)
+	void Remove(int fd)
 	{
-		auto iter = mapHandler_.find(spEventHandler->GetFd());
+		auto iter = mapHandler_.find(fd);
 		if (iter != mapHandler_.end())
 		{
 			mapHandler_.erase(iter);
-			spNsEpoll_->Remove(spEventHandler->GetFd());
+			spNsEpoll_->Remove(fd);
 		}
 
+	}
+
+	void Mod(int fd, Event event)
+	{
+		auto iter = mapHandler_.find(fd);
+		if (iter != mapHandler_.end())
+		{
+			spNsEpoll_->Mod(fd, event);
+		}
 	}
 	void Loop(int timeout)
 	{
