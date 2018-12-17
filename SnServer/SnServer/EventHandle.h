@@ -1,4 +1,8 @@
 #pragma once
+#ifndef EVENTHANDLE_H_
+#define EVENTHANDLE_H_
+#include<memory>
+
 enum EventType
 {
 	ReadEvent = 0x01,
@@ -15,7 +19,7 @@ public:
 	virtual void WriteHandle() = 0;
 	virtual void ErrorHandle() = 0;
 	virtual void SetHandlerType(Event type) { type_ = type; }
-	virtual int GetFd() {}
+	virtual int GetFd() { return 0; }
 	Event GetHandlerType() { return type_; };
 protected:
 	Event type_;
@@ -24,77 +28,4 @@ typedef std::shared_ptr<EventHandler> EventHandlerPtr;
 typedef std::shared_ptr<std::function<void(EventHandlerPtr)> > FuncHandlePtr;
 
 
-/*class ListenHandler :public EventHandler
-{
-	
-public:
-	ListenHandler(int fd) :
-		sock_(fd),
-		spReactor_(Reactor::GetReactorPtr())
-		{
-			EventHandler::SetHandlerType(EventType::ReadEvent);
-		}
-	void SetFuncHandleListen(FuncHandlePtr spFuncHandleListen)
-	{
-		spFuncHandleListen_ = spFuncHandleListen;
-	}
-	void ReadHandle()
-	{
-		Socket sock = sock_.Accept();
-		if (spFuncHandleListen_)
-		{
-			(*spFuncHandleListen_)(sock);
-		}
-		spReactor_->AddHandler(shared_from_this());
-	}
-    void WriteHandle() {};
-    void ErrorHandle() {};
-private:
-	Socket sock_;
-	ReactorPtr spReactor_;
-	FuncHandleListenPtr spFuncHandleListen_;
-};
-
-class AcceptHandler :public EventHandler
-{
-
-public:
-	AcceptHandler(int fd) :
-		sock_(fd),
-		spReactor_(Reactor::GetReactorPtr())
-	{
-		EventHandler::SetHandlerType(EventType::ReadEvent);
-	}
-	void SetFuncHandleListen(FuncHandlePtr spFuncHandleAccept)
-	{
-		spFuncHandleAccept_ = spFuncHandleAccept;
-	}
-	void ReadHandle()
-	{
-		if (spFuncHandleAccept_)
-		{
-			(*spFuncHandleAccept_)(shared_from_this());
-		}
-		if(type_ & WriteEvent)
-		{
-
-		}
-		
-	}
-	void WriteHandle() {};
-	void ErrorHandle() {};
-private:
-	Socket sock_;
-	ReactorPtr spReactor_;
-	FuncHandlePtr spFuncHandleAccept_;
-
-};
-
-class WriteHandler :public EventHandler
-{
-
-};
-class ReadHandler :public EventHandler
-{
-
-};*/
+#endif

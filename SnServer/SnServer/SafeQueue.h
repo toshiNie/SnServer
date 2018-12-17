@@ -4,12 +4,8 @@ template<typename T>
 class SafeQueue
 {
 public:
-	SafeQueue(size_t maxsize) :
-		maxSize_(maxsize),
-		mutex_(),
-		condNotEmpty_(mutex_),
-		condNotFull_(mutex_),
-		queue_(maxSize_)
+	SafeQueue(size_t maxsize = 1024) :
+		maxSize_(maxsize)
 	{
 
 	}
@@ -24,7 +20,7 @@ public:
 	//	condNotEmpty_.notify_one();
 	//}
 
-	void push(T x)
+	void push(T&& x)
 	{
 		std::unique_lock<std::mutex> lck(mutex_);
 		while (isFullWithoutLock())

@@ -16,11 +16,10 @@ public:
 		std::chrono::milliseconds ms(milliseconds);
 		std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> t1(ms);
 		std::time_t t = std::chrono::system_clock::to_time_t(t1);
-
 		auto const msecs = milliseconds % 1000;
-		std::stringstream ss;
-		//ss << std::put_time(std::localtime(&t), format);
-		return ss.str();
+		char tmp[100] = { 0 };
+		strftime(tmp, sizeof(tmp), format, localtime(&t));
+		return tmp;
 	}
 	static std::string GetStrTimeStamp(const char* format = "%Y-%m-%d %H.%M.%S")
 	{

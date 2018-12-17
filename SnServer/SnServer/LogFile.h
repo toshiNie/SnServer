@@ -40,6 +40,7 @@ private:
 		spWriteableFile_.reset(new PosixWritableFile(strFileName.c_str()));
 		if (!spWriteableFile_->Open())
 		{
+			std::cout << "open log file error" << std::endl;
 			return false;
 		}
 		fileNames_.push_back(std::move(strFileName));

@@ -6,5 +6,9 @@ link_libraries(pthread)
 add_executable(SnServer
 	SnServer.cpp
 	stdafx.cpp
+	Reactor.cpp
+	Epoll.cpp
+	TcpServer.cpp
+	SocketUtil.cpp
 	FileUtil.cpp)
 

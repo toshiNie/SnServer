@@ -50,7 +50,7 @@ public:
 	}
 	~Socket()
 	{
-		::close(fd_);
+		//::close(fd_);
 	}
 private:
 	int fd_;

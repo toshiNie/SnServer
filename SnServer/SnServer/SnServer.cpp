@@ -3,15 +3,16 @@
 
 #include "stdafx.h"
 #include "Time.h"
-#include "Log.h"
+#include "LogThread.h"
 #include"TcpServer.h"
 
 int main()
 {
 	std::cout << NsTime::GetStrTimeStamp() << std::endl;
-	NsLog::Instance().AddLogFile("hello","tg.log");
-	NsLog &log = NsLog::Instance();
-	log.AddLog("hello","123",3);
+
+	LogThread& thread = LogThread::getInstance();
+	thread.addLogFile("info", "nslog.log");
+	thread.run();
 
 	EchoServer server;
 	server.run();

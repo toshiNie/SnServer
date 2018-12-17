@@ -23,17 +23,19 @@ public:
 
 	void AddLog(const std::string& strMoudle,const char* data,size_t size)
 	{
+		std::lock_guard<std::mutex> lg(mutex_);
 		auto iter = mapLogFile_.find(strMoudle);
 		if (iter != mapLogFile_.end())
 		{
 			std::stringstream ss;
-			ss << " [" << strMoudle << "] " << data;
+			ss << " [" << strMoudle << "] " << data << "\n";
 			iter->second->Append(ss.str().c_str(),ss.str().size());
 		}
 	}
 private:
 	std::map<std::string, LogFilePtr> mapLogFile_;
+	std::mutex mutex_;
 };
 
 //#define LOG_INFO(A)  NsLog::Instance().AddLog("info",A,strlen(A));
-#define LOG_INFO(A)  std::cout<<A<<std::endl;
+//#define LOG_INFO(A)  std::cout<<A<<std::endl;

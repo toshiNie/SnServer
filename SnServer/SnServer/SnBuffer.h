@@ -16,6 +16,12 @@ public:
 		index_ += size;
 	}
 
+	SnBuffer(SnBuffer && rvl)
+	{
+		buffer_.swap(rvl.buffer_);
+		index_ = rvl.index_;
+		headSize_ = rvl.headSize_;
+	}
 	void consumHead(size_t size)
 	{
 		headSize_ += size;
@@ -36,7 +42,6 @@ public:
 	}
 private:
 	std::vector<char> buffer_;
-	std::vector<char>::iterator iter_;	
 	size_t index_;
 	size_t headSize_;
 };
