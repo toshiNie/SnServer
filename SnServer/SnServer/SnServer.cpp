@@ -11,9 +11,11 @@ int main()
 	std::cout << NsTime::GetStrTimeStamp() << std::endl;
 
 	LogThread& thread = LogThread::getInstance();
-	thread.addLogFile("info", "nslog.log");
+	//FILE * file = fopen("/dev/null","w");
+	FILE * file = fopen("/dev/stdout","w+");
+	thread.addLogFile("info", file);
+	//thread.addLogFile("info", "ns.log");
 	thread.run();
-
 	EchoServer server;
 	server.run();
 

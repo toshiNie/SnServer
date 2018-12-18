@@ -78,19 +78,20 @@ namespace socketutil
 			if (nread = read(sfd, ptr, nleft) < 0)
 			{
 				if (errno == EINTR)
-					nread = 0;
+					continue;
 				else
 					return -1;
 			}
 			else if (nread == 0)
 			{
-				break;
+				return 0;
 			}
 			nleft -= nread;
 			ptr += nread;
 		}
 		return n - nleft;
 	}
+	
 
 	ssize_t readline(int sfd, void* vptr, size_t maxsize)
 	{

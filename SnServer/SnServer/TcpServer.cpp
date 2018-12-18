@@ -4,7 +4,14 @@
 
 void AcceptHandler::ReadHandle()
 {
+	LOG_INFO("accept handle");
+	std::lock_guard<std::mutex> lg(*mutex_);
 	int sock = ::accept(sock_, NULL, NULL);
+	if (sock < 0)
+	{
+		return;
+	}
+	LOG_INFO("accept sock: " + std::to_string(sock));
 	socketutil::make_socket_non_blocking(sock);
 	EventHandlerPtr spReadHandler(new EchoReadHandler(sock, spReactor_));
 	spReactor_->AddHandler(spReadHandler);
@@ -12,54 +19,69 @@ void AcceptHandler::ReadHandle()
 
  void EchoReadHandler::ReadHandle()
 {
-	LOG_INFO(__FUNCTION__);
+	LOG_INFO("echo read handle");
 	int r = 0;
-	while (true)
+	int len = 0;
+	int ret = ::read(sock_, (void*)&len, sizeof(len));
+	if (ret == 0)
 	{
-		LOG_INFO("Loop");
-		std::vector<char> buffer(1025);
-		r = socketutil::readline(sock_, buffer.data(), 1024);
+		LOG_INFO("client disconnect:" + std::to_string(errno));
+		spReactor_->Remove(sock_);
+		::close(sock_);
+		return;
+	}
+	if (ret < 0)
+	{
+		LOG_INFO("error:" + std::to_string(errno));
+		spReactor_->Remove(sock_);
+		::close(sock_);
+		return;
+	}
+	LOG_INFO("read size:" + std::to_string(len));
+	std::vector<char> buffer(len);
+	while (r < len)
+	{
+		r = ::read(sock_, buffer.data() + r, len);
 		if (r < 0)
 		{
-			std::cout << "error:" << errno;
+			if (errno = EAGAIN)
+			{
+				return;
+			}
+			LOG_INFO("error:"  + std::to_string(errno));
 			spReactor_->Remove(sock_);
 			::close(sock_);
 			return;
 		}
 		if (r == 0)
 		{
-			LOG_INFO("client disconnect");
+			LOG_INFO("client disconnect:" + std::to_string(errno));
 			readBuffer_.reset();
 			spReactor_->Remove(sock_);
 			::close(sock_);
 			return;
 		}
-		std::cout << "read size:" << r << std::endl;
-		if (r < 1024)
-		{
-			readBuffer_.append(buffer.data(), r);
-			break;
-		}
-		readBuffer_.append(buffer.data(), r - 1);
 	}
-	std::cout << readBuffer_.getbuffer() << std::endl;
+	readBuffer_.append(buffer.data(), len);
+	LOG_INFO(readBuffer_.getbuffer());
 	//EventHandlerPtr spHander(new EchoWriteHandler(sock_,spReactor_, std::move(readBuffer_)));
 	//ReactorPtr spReactor = Reactor::GetReactorPtr();
 	//spReactor->AddHandler(spHander);
 
-	int w = 0;
-	w = socketutil::writen(sock_, (void*)readBuffer_.getbuffer(), readBuffer_.size());
-	std::cout << "write size:" << w << std::endl;
-	readBuffer_.reset();
-	if (w < r)
-	{
-		readBuffer_.consumHead(w);
-		EventHandlerPtr spHander(new EchoWriteHandler(sock_, spReactor_, std::move(readBuffer_)));
-		spHander->SetHandlerType(WriteEvent);
-		ReactorPtr spReactor = Reactor::GetReactorPtr();
-		spReactor->AddHandler(spHander);
-	}
-	spReactor_->Mod(sock_, ReadEvent);
+	EventHandlerPtr spHander(new EchoWriteHandler(sock_, spReactor_, std::move(readBuffer_)));
+	spReactor_->AddHandler(spHander);
+
+	//int w = 0;
+	//w = socketutil::writen(sock_, (void*)readBuffer_.getbuffer(), readBuffer_.size());
+	//std::cout << "write size:" << w << std::endl;
+	//readBuffer_.reset();
+	//if (w < r)
+	//{
+	//	EventHandlerPtr spHander(new EchoWriteHandler(sock_, spReactor_, std::move(readBuffer_)));
+	//	spHander->SetHandlerType(WriteEvent);
+	//	spReactor_->AddHandler(spHander);
+	//}
+	//spReactor_->Mod(sock_, ReadEvent);
 	//else
 	//{
 	//	readBuffer_.reset();
@@ -71,8 +93,11 @@ void AcceptHandler::ReadHandle()
  void EchoWriteHandler::WriteHandle()
  {
 	 LOG_INFO(__FUNCTION__);
-	 socketutil::writen(sock_, (void*)writedBuffer_.getbuffer(), writedBuffer_.size());
+	 int w = socketutil::writen(sock_, (void*)writedBuffer_.getbuffer(), writedBuffer_.size());
+	 LOG_INFO("write size:" + std::to_string(w));
 	 writedBuffer_.reset();
+	 EventHandlerPtr spReadHandler(new EchoReadHandler(sock_, spReactor_));
+	 spReactor_->AddHandler(spReadHandler);
  }
 
  void EchoServer::run()
@@ -80,20 +105,33 @@ void AcceptHandler::ReadHandle()
 	 listenAddress_.strIp_ = "127.0.0.1";
 	 listenAddress_.port = 4321;
 	 listtenSocket_.BindAddress(listenAddress_);
-	 listtenSocket_.Listen(1024);
+	 if (!listtenSocket_.Listen(1024))
+	 {
+		 LOG_INFO("listen failed");
+		 return;
+	 }
+	 socketutil::make_socket_non_blocking(listtenSocket_.GetSockFd());
 	 LOG_INFO("listen OK");
 
-	 for (int i = 0; i < 1; ++i)
-	 {
-		 pool_.PushPack(std::bind(&EchoServer::readThread, this));
-	 }
+	 //for (int i = 0; i < 1; ++i)
+	 //{
+		// pool_.PushPack(std::bind(&EchoServer::readThread, this));
+	 //}
 	 //pool_.PushPack(std::bind(&EchoServer::acceptThread, this));
-	 pool_.Start();
-
-	 while (pool_.isRunning())
+	 //pool_.Start();
+	 for (int i = 0; i < 3; ++i)
 	 {
-		 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+		 threads_.push_back(ThreadPtr(new std::thread(std::bind(&EchoServer::readThread, this))));
 	 }
+	 for (int i = 0; i < 3; ++i)
+	 {
+		 threads_[i]->join();
+	 }
+
+	 //while (pool_.isRunning())
+	 //{
+		// std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	 //}
  }
 
  void EchoServer::acceptThread()
@@ -119,12 +157,13 @@ void AcceptHandler::ReadHandle()
  {
 	 LOG_INFO("readThread start");
 	 ReactorPtr spReactor(new Reactor());
-	 EventHandlerPtr spAcceptHandler(new AcceptHandler(listtenSocket_.GetSockFd(), spReactor));
+	 EventHandlerPtr spAcceptHandler(new AcceptHandler(listtenSocket_.GetSockFd(), spReactor, &mutex_));
 	 spReactor->AddHandler(spAcceptHandler);
 	 while (true)
+	 // for(int i =0;i<10000;++i)
 	 {
 		 spReactor->Loop(10);
-		 //printf("loop address: %x\n", &(*spReactor));
-		 std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		 //rintf("loop address: %x\n", &(*spReactor));
+		 //std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	 }
  }

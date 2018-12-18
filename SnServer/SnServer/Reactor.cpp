@@ -8,11 +8,12 @@ void Reactor::AddHandler(EventHandlerPtr spEventHandler)
 	auto iter = mapHandler_.find(spEventHandler->GetFd());
 	if (iter == mapHandler_.end())
 	{
-		spNsEpoll_->AddEvent(spEventHandler->GetFd(), spEventHandler->GetHandlerType());
 		mapHandler_[spEventHandler->GetFd()] = spEventHandler;
+		spNsEpoll_->AddEvent(spEventHandler->GetFd(), spEventHandler->GetHandlerType());
 	}
 	else
 	{
+		mapHandler_[spEventHandler->GetFd()] = spEventHandler;
 		spNsEpoll_->Mod(spEventHandler->GetFd(), spEventHandler->GetHandlerType());
 	}
 }
