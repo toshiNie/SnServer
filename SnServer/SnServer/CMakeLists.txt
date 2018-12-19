@@ -11,5 +11,9 @@ add_executable(SnServer
 	TcpServer.cpp
 	SocketUtil.cpp
 	SigProcess.cpp
+	EchoServer.cpp
+	Log.cpp
+	LogThread.cpp
+	LogFile.cpp
 	FileUtil.cpp)
 

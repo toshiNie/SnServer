@@ -4,8 +4,8 @@
 #include "stdafx.h"
 #include "Time.h"
 #include "LogThread.h"
-#include"TcpServer.h"
-#include"SigProcess.h"
+#include "EchoServer.h"
+#include "SigProcess.h"
 
 int main()
 {
@@ -13,14 +13,13 @@ int main()
 	LogThread& thread = LogThread::getInstance();
 	registeSig();
 	//FILE * file = fopen("/dev/null","w");
-	//FILE * file = fopen("/dev/stdout","w+");
-	//thread.addLogFile("info", file);
-	thread.addLogFile("info", "ns.log");
+	FILE * file = fopen("/dev/stdout","we");
+	thread.addLogFile("info", file);
+	//thread.addLogFile("info", "ns.log");
 	thread.run();
 	EchoServer server;
 	server.run();
 	thread.join();
-
     return 0;
 }
 
