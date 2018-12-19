@@ -4,7 +4,7 @@ template<typename T>
 class SafeQueue
 {
 public:
-	SafeQueue(size_t maxsize = 1024) :
+	SafeQueue(size_t maxsize = -1) :
 		maxSize_(maxsize)
 	{
 
@@ -27,7 +27,7 @@ public:
 		{
 			condNotFull_.wait(lck);
 		}
-		queue_.push(x);
+		queue_.push(std::move(x));
 		condNotEmpty_.notify_one();
 	}
 
@@ -68,6 +68,10 @@ private:
 private:
 	bool isFullWithoutLock()
 	{
+		if (maxSize_ == 0)
+		{
+			return false;
+		}
 		return queue_.size() >= maxSize_;
 	}
 	bool isEmptyWithoutLock()

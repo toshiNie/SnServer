@@ -51,6 +51,7 @@ void NsEpoll::AddEvent(int handle, Event type)
 	{
 		LOG_INFO("EPOLLOUT");
 		stEvt.events |= EPOLLOUT;
+		stEvt.events |= EPOLLIN;
 	}
 	if (0 != epoll_ctl(epollFd_, EPOLL_CTL_ADD, handle, &stEvt))
 	{
@@ -85,9 +86,11 @@ bool NsEpoll::Mod(int handle, Event event)
 	{
 		LOG_INFO("EPOLLOUT");
 		stEvt.events |= EPOLLOUT;
+		stEvt.events |= EPOLLIN;
 	}
 	if (0 != epoll_ctl(epollFd_, EPOLL_CTL_MOD, handle, &stEvt))
 	{
+		LOG_INFO("epoll_ctl error" + std::to_string(errno));
 		return false;
 	}
 	return true;

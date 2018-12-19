@@ -7,10 +7,9 @@ public:
 	SnBuffer(size_t size = 1024) :buffer_(size), index_(HeadSize), headSize_(HeadSize){}
 	void append(const char* data, size_t size)
 	{
-		std::cout << buffer_.size()<<std::endl;
 		if (buffer_.size() < index_ + size)
 		{
-			buffer_.resize(buffer_.size() * 2);
+			buffer_.resize(buffer_.size() * 2 + size);
 		}
 		memcpy(buffer_.data() + index_, data, size);
 		index_ += size;
@@ -28,11 +27,11 @@ public:
 	}
 	size_t size()
 	{
-		return index_;
+		return index_ - headSize_;
 	}
-	const char * getbuffer(size_t headSize = 0)
+	const char * getbuffer()
 	{
-		return buffer_.data() + headSize;
+		return buffer_.data() + headSize_;
 	}
 	void reset()
 	{

@@ -15,9 +15,9 @@ class EventHandler: public std::enable_shared_from_this<EventHandler>
 {
 public:
 	virtual	~EventHandler() {};
-	virtual void ReadHandle() = 0;
-	virtual void WriteHandle() = 0;
-	virtual void ErrorHandle() = 0;
+	virtual void ReadHandle() {}
+	virtual void WriteHandle() {}
+	virtual void ErrorHandle() {}
 	virtual void SetHandlerType(Event type) { type_ = type; }
 	virtual int GetFd() { return 0; }
 	Event GetHandlerType() { return type_; };
@@ -25,7 +25,7 @@ protected:
 	Event type_;
 };
 typedef std::shared_ptr<EventHandler> EventHandlerPtr;
-typedef std::shared_ptr<std::function<void(EventHandlerPtr)> > FuncHandlePtr;
+
 
 
 #endif

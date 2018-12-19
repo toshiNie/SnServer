@@ -20,6 +20,11 @@ class PosixWritableFile :public WritableFile
 public:
 	PosixWritableFile(const char* fileName) :strFileName_(fileName), file_(NULL)
 	{
+		
+	}
+	PosixWritableFile(const FILE* file) :strFileName_(), file_(const_cast<FILE*>(file))
+	{
+		//::setbuffer(file_, buffer_, sizeof(buffer_));
 	}
 	~PosixWritableFile()
 	{
@@ -30,12 +35,17 @@ public:
 	}
 	bool Open()
 	{
-		file_ = ::fopen(strFileName_.c_str(), "w");
+		file_ = ::fopen(strFileName_.c_str(), "ae");
+		if (file_ != NULL)
+		{
+			::setbuffer(file_, buffer_, sizeof(buffer_));
+		}
 		return file_ != NULL;
 	}
 	bool Append(const char* data, size_t size)
 	{
-		size_t s = fwrite(data, 1, size, file_);
+		//size_t s = fwrite(data, 1, size, file_);
+		size_t s = fwrite_unlocked(data, 1, size, file_);
 		if (size != s)
 			return false;
 		return true;
@@ -48,5 +58,6 @@ public:
 	}
 private:
 	FILE* file_;
+	char buffer_[64 * 1024];
 	std::string strFileName_;
 };

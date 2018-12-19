@@ -1,4 +1,5 @@
-#include"stdafx.h"
+#include "stdafx.h"
+#include "SigProcess.h"
 #include "TcpServer.h"
 
 
@@ -25,7 +26,7 @@ void AcceptHandler::ReadHandle()
 	int ret = ::read(sock_, (void*)&len, sizeof(len));
 	if (ret == 0)
 	{
-		LOG_INFO("client disconnect:" + std::to_string(errno));
+		LOG_INFO("client disconnect:" + std::to_string(sock_));
 		spReactor_->Remove(sock_);
 		::close(sock_);
 		return;
@@ -37,26 +38,19 @@ void AcceptHandler::ReadHandle()
 		::close(sock_);
 		return;
 	}
-	LOG_INFO("read size:" + std::to_string(len));
+	LOG_INFO("read len:" + std::to_string(len));
 	std::vector<char> buffer(len);
 	while (r < len)
 	{
 		r = ::read(sock_, buffer.data() + r, len);
-		if (r < 0)
+		LOG_INFO("read size:" + std::to_string(r));
+		if (r <= 0)
 		{
 			if (errno = EAGAIN)
 			{
 				return;
 			}
 			LOG_INFO("error:"  + std::to_string(errno));
-			spReactor_->Remove(sock_);
-			::close(sock_);
-			return;
-		}
-		if (r == 0)
-		{
-			LOG_INFO("client disconnect:" + std::to_string(errno));
-			readBuffer_.reset();
 			spReactor_->Remove(sock_);
 			::close(sock_);
 			return;
@@ -70,32 +64,32 @@ void AcceptHandler::ReadHandle()
 
 	EventHandlerPtr spHander(new EchoWriteHandler(sock_, spReactor_, std::move(readBuffer_)));
 	spReactor_->AddHandler(spHander);
-
-	//int w = 0;
-	//w = socketutil::writen(sock_, (void*)readBuffer_.getbuffer(), readBuffer_.size());
-	//std::cout << "write size:" << w << std::endl;
-	//readBuffer_.reset();
-	//if (w < r)
-	//{
-	//	EventHandlerPtr spHander(new EchoWriteHandler(sock_, spReactor_, std::move(readBuffer_)));
-	//	spHander->SetHandlerType(WriteEvent);
-	//	spReactor_->AddHandler(spHander);
-	//}
-	//spReactor_->Mod(sock_, ReadEvent);
-	//else
-	//{
-	//	readBuffer_.reset();
-	//	spReactor_->Mod(sock_, ReadEvent);
-	//}
 }
  
 
  void EchoWriteHandler::WriteHandle()
  {
 	 LOG_INFO(__FUNCTION__);
-	 int w = socketutil::writen(sock_, (void*)writedBuffer_.getbuffer(), writedBuffer_.size());
-	 LOG_INFO("write size:" + std::to_string(w));
-	 writedBuffer_.reset();
+	 int w = 0;
+	 while (writedBuffer_.size() > 0)
+	 {
+		 w = ::write(sock_, (void*)writedBuffer_.getbuffer(), writedBuffer_.size());
+		 LOG_INFO("write size:" + std::to_string(w));
+		 if (w < 0)
+		 {
+			 if (errno == EAGAIN)
+			 {
+				 continue;
+			 }
+			 else
+			 {
+				 LOG_INFO("write error:" + std::to_string(errno));
+				 spReactor_->Remove(sock_);
+				 ::close(sock_);
+			 }
+		 }
+		 writedBuffer_.consumHead(w);
+	 }
 	 EventHandlerPtr spReadHandler(new EchoReadHandler(sock_, spReactor_));
 	 spReactor_->AddHandler(spReadHandler);
  }

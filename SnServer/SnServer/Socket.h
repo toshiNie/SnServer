@@ -33,8 +33,7 @@ public:
 	}
 	bool Listen(int listenSize)
 	{
-		::listen(fd_,listenSize);
-		return true;
+		return ::listen(fd_, listenSize) == 0;
 	}
 	Socket Accept(Address& address)
 	{

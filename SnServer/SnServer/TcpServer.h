@@ -74,7 +74,13 @@ public:
 		::close(sock_);
 	};
 	virtual int GetFd() { return sock_; }
-	
+private:
+	int readSize()
+	{
+		int len = 0;
+		int size = read(sock_, (void*)&len, sizeof(len));
+		return len;
+	}
 private:
 	SnBuffer readBuffer_;
 	int sock_;
@@ -85,7 +91,7 @@ private:
 class AcceptHandler : public EventHandler
 {
 public:
-	AcceptHandler(int fd, ReactorPtr spReactor) :sock_(fd), spReactor_(spReactor)
+	AcceptHandler(int fd, ReactorPtr spReactor, std::mutex* mutex) :sock_(fd), spReactor_(spReactor),mutex_(mutex)
 	{
 		SetHandlerType(ReadEvent);
 	}
@@ -104,11 +110,13 @@ public:
 private:
 	int sock_;
 	ReactorPtr spReactor_;
+	std::mutex *mutex_;
 };
 
 
 class EchoServer
 {
+	typedef std::shared_ptr<std::thread> ThreadPtr;
 public:
 	EchoServer()
 	{
@@ -131,6 +139,7 @@ private:
 	Address listenAddress_;
 	Socket listtenSocket_;
 	CThreadPool pool_;
+	std::vector<ThreadPtr> threads_;
 	std::vector<ReactorPtr> subReactors_;
 	std::mutex mutex_;
 };
