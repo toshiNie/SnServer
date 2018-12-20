@@ -146,15 +146,20 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EchoServer.h" />
     <ClInclude Include="Env.h" />
     <ClInclude Include="Epoll.h" />
     <ClInclude Include="EventHandle.h" />
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LogFile.h" />
+    <ClInclude Include="LogThread.h" />
     <ClInclude Include="noncopyable.h" />
     <ClInclude Include="Reactor.h" />
+    <ClInclude Include="ReadThread.h" />
     <ClInclude Include="SafeQueue.h" />
+    <ClInclude Include="Session.h" />
+    <ClInclude Include="SigProcess.h" />
     <ClInclude Include="SnBuffer.h" />
     <ClInclude Include="Socket.h" />
     <ClInclude Include="SocketUtil.h" />
@@ -163,16 +168,29 @@
     <ClInclude Include="TcpServer.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="TimeHandler.h" />
+    <ClInclude Include="TimeWheel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EchoServer.cpp" />
+    <ClCompile Include="Epoll.cpp" />
     <ClCompile Include="FileUtil.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="LogFile.cpp" />
+    <ClCompile Include="LogThread.cpp" />
+    <ClCompile Include="Reactor.cpp" />
+    <ClCompile Include="ReadThread.cpp" />
+    <ClCompile Include="SigProcess.cpp" />
     <ClCompile Include="SnServer.cpp" />
+    <ClCompile Include="SocketUtil.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TcpServer.cpp" />
+    <ClCompile Include="TimeHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,7 +24,7 @@ int NsEpoll::WaitEvent(std::map<int, EventHandlerPtr> eventHandles, int timeout)
 			{
 				if ((EPOLLIN | EPOLLPRI | EPOLLRDHUP) & vecEvents[i].events)
 				{
-					//LOG_INFO("readEvent");
+					LOG_INFO("readEvent");
 					eventHandles[handle]->ReadHandle();
 				}
 				if (EPOLLOUT & vecEvents[i].events)

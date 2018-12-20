@@ -1,25 +1,35 @@
 #include "stdafx.h"
 #include "EchoServer.h"
 #include "TimeHandler.h"
+#include "ReadThread.h"
 
 
 void AcceptHandler::ReadHandle()
 {
 	LOG_INFO("accept handle");
-	std::lock_guard<std::mutex> lg(*mutex_);
+	std::lock_guard <std::mutex> lg(*mutex_);
 	int sock = ::accept(sock_, NULL, NULL);
+	LOG_INFO("accept sock: " + std::to_string(sock));
 	if (sock < 0)
 	{
 		return;
 	}
-	LOG_INFO("accept sock: " + std::to_string(sock));
 	socketutil::make_socket_non_blocking(sock);
+
+	ConnectSessionPtr spConnect(new ConnectSession(sock));
+	auto spThisThread = spReactor_-> wpThisThead_.lock();
+	spThisThread->getTimeWheel().addSock(spConnect);
+	spThisThread->getManager().insert(std::make_pair(sock,spConnect));
+
 	EventHandlerPtr spReadHandler(new EchoReadHandler(sock, spReactor_));
 	spReactor_->AddHandler(spReadHandler);
+	LOG_INFO("add read handler:" + std::to_string(sock));
 }
 
 void EchoReadHandler::ReadHandle()
 {
+	auto spThisThread = spReactor_->wpThisThead_.lock();
+	spThisThread->getTimeWheel().resetSock(spThisThread->getManager()[sock_]);
 	LOG_INFO("echo read handle");
 	int r = 0;
 	int len = 0;
@@ -27,15 +37,13 @@ void EchoReadHandler::ReadHandle()
 	if (ret == 0)
 	{
 		LOG_INFO("client disconnect:" + std::to_string(sock_));
-		spReactor_->Remove(sock_);
-		::close(sock_);
+		spThisThread->removeClient(sock_);
 		return;
 	}
 	if (ret < 0)
 	{
 		LOG_INFO("error:" + std::to_string(errno));
-		spReactor_->Remove(sock_);
-		::close(sock_);
+		spThisThread->removeClient(sock_);;
 		return;
 	}
 	LOG_INFO("read len:" + std::to_string(len));
@@ -51,8 +59,7 @@ void EchoReadHandler::ReadHandle()
 			{
 				return;
 			}
-			spReactor_->Remove(sock_);
-			::close(sock_);
+			spThisThread->removeClient(sock_);
 			return;
 		}
 	}
@@ -67,6 +74,7 @@ void EchoWriteHandler::WriteHandle()
 {
 	LOG_INFO(__FUNCTION__);
 	int w = 0;
+	auto spThisThread = spReactor_->wpThisThead_.lock();
 	while (writedBuffer_.size() > 0)
 	{
 		w = ::write(sock_, (void*)writedBuffer_.getbuffer(), writedBuffer_.size());
@@ -80,8 +88,7 @@ void EchoWriteHandler::WriteHandle()
 			else
 			{
 				LOG_INFO("write error:" + std::to_string(errno));
-				spReactor_->Remove(sock_);
-				::close(sock_);
+				spThisThread->removeClient(sock_);
 			}
 		}
 		writedBuffer_.consumHead(w);
@@ -105,12 +112,13 @@ void EchoServer::run()
 
 	for (int i = 0; i < 3; ++i)
 	{
-		threads_.push_back(ThreadPtr(new std::thread(std::bind(&EchoServer::readThread, this))));
+		ReadThreadPtr spReadThread(new ReadThread(listtenSocket_.GetSockFd(),&mutex_));
+		threads_.insert(std::make_pair(ThreadPtr(new std::thread(std::bind(&ReadThread::run, spReadThread))), spReadThread));
 	}
-	threads_.push_back(ThreadPtr(new std::thread(std::bind(&EchoServer::timerThread, this))));
-	for (int i = 0; i < 4; ++i)
+
+	for (auto& item : threads_)
 	{
-		threads_[i]->join();
+		item.first->join();
 	}
 }
 
@@ -132,7 +140,7 @@ void EchoServer::acceptThread()
 	}
 }
 
-void EchoServer::readThread()
+void EchoServer::readThread(int threadIndex)
 {
 	LOG_INFO("readThread start");
 	ReactorPtr spReactor(new Reactor());
@@ -149,15 +157,6 @@ void EchoServer::readThread()
 void EchoServer::timerThread()
 {
 	ReactorPtr spReactor(new Reactor());
-	TimeEventPtr spEvent(new TimeEvent(
-		[] () {
-		LOG_INFO("timer");
-	}
-	));
-
-	spEvent->setTime(3000);
-	EventHandlerPtr spEventHandler(new TimeHandler(spEvent, spReactor));
-	spReactor->AddHandler(spEventHandler);
 	while (true)
 	{
 		spReactor->Loop(10);

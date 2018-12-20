@@ -7,6 +7,9 @@
 #include"SnBuffer.h"
 #include"LogThread.h"
 #include"EventHandle.h"
+#include "Session.h"
+#include "TimeWheel.h"
+#include "ReadThread.h"
 	
 class EchoWriteHandler :public EventHandler
 {
@@ -69,7 +72,7 @@ private:
 class AcceptHandler : public EventHandler
 {
 public:
-	AcceptHandler(int fd, ReactorPtr spReactor, std::mutex* mutex) :sock_(fd), spReactor_(spReactor), mutex_(mutex)
+	AcceptHandler(int fd, ReactorPtr spReactor, std::mutex* mutex  = NULL) :sock_(fd), spReactor_(spReactor), mutex_(mutex)
 	{
 		SetHandlerType(ReadEvent);
 	}
@@ -110,13 +113,12 @@ public:
 
 	void run();
 	void acceptThread();
-	void readThread();
+	void readThread(int treadIndex);
 	void timerThread();
-
 private:
 	Address listenAddress_;
 	Socket listtenSocket_;
-	std::vector<ThreadPtr> threads_;
+	std::map<ThreadPtr, ReadThreadPtr> threads_;
 	std::vector<ReactorPtr> subReactors_;
 	std::mutex mutex_;
 };

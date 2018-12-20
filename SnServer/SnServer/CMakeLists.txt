@@ -15,5 +15,7 @@ add_executable(SnServer
 	Log.cpp
 	LogThread.cpp
 	LogFile.cpp
+	TimeHandler.cpp
+	ReadThread.cpp
 	FileUtil.cpp)
 

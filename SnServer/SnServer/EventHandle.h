@@ -26,6 +26,10 @@ protected:
 };
 typedef std::shared_ptr<EventHandler> EventHandlerPtr;
 
+class ReadThread;
+typedef std::shared_ptr<ReadThread> ReadThreadPtr;
+typedef std::weak_ptr<ReadThread> ReadThreadWeakPtr;
+
 
 
 #endif

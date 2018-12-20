@@ -24,6 +24,7 @@
 #include<thread>
 #include <mutex> 
 #include<queue>
+#include<list>
 #include <condition_variable>
 
 //#ifdef WIN32
