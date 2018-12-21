@@ -29,10 +29,26 @@ public:
 	{
 		return index_ - headSize_;
 	}
-	const char * getbuffer()
+	char * getReadbuffer()
 	{
 		return buffer_.data() + headSize_;
 	}
+	
+	int read(std::vector<char> &buffer, int len)
+	{
+		if (len > size())
+		{
+			return -1;
+		}
+		memcpy(buffer.data(), buffer_.data(), len);
+		size_t remainSize = size() - len;
+		std::vector<char> temp(buffer_.size());
+		memcpy(temp.data(), buffer_.data() + len, remainSize);
+		buffer_.swap(temp);
+		index_ = 0;
+		return len;
+	}
+
 	void reset()
 	{
 		std::vector<char> vec(1024);

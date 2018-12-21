@@ -1,38 +1,34 @@
 #pragma once
 #ifndef CONNECTSESSION_H_
 #define CONNECTSESSION_H_
-#include "stdafx.h"
-#include "Reactor.h"
-#include "TimeHandler.h"
 
-class ConnectSession
+class ConnectSession: public std::enable_shared_from_this<ConnectSession>
 {
 public:
-	ConnectSession(int sock)
-		:sock_(sock),index_(-1)
-	{
+	ConnectSession(int sock, ReactorPtr spReactor);
 
-	}
-	void setIndex(int index) 
-	{
-		index_ = index;
-	}
-	int getIndex()
-	{
-		return index_;
-	}
-	int getFd()
-	{
-		return sock_;
-	}
-	void close() 
-	{
-		::close(sock_);
-	}
+	void setIndex(int index);
 
+	int getIndex();
+
+	int getFd();
+
+	ReactorPtr getReactor();
+
+	void close();
+
+	void onRead();
+
+	bool onWrite(int len);
+
+	void onMessage(std::vector<char>& buffer);
+
+	SnBuffer readbuffer_;
+	SnBuffer writebuffer_;
 private:
 	int sock_;
 	int index_;
+	ReactorPtr spReactor_;
 };
 typedef std::shared_ptr<ConnectSession>  ConnectSessionPtr;
 

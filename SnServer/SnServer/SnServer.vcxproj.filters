@@ -16,6 +16,18 @@
     <Filter Include="头文件\Reactor">
       <UniqueIdentifier>{f421be75-46d3-439b-9bc7-3c32ab369f15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Log">
+      <UniqueIdentifier>{1eafb870-b0c0-4053-bd14-aa5c84f5b798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Utils">
+      <UniqueIdentifier>{ecc1da66-db62-448f-a4bd-13aa5fd4301b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Reactor">
+      <UniqueIdentifier>{a29af851-7610-4dd8-b395-2cb9a65cf1d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Log">
+      <UniqueIdentifier>{72fc1e40-0068-417a-b16c-08c2b966ad8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -27,16 +39,7 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Time.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="LogFile.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="FileUtil.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="noncopyable.h">
@@ -45,14 +48,8 @@
     <ClInclude Include="Env.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ThreadPool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SocketUtil.h">
       <Filter>头文件\Reactor</Filter>
-    </ClInclude>
-    <ClInclude Include="SnBuffer.h">
-      <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Socket.h">
       <Filter>头文件\Reactor</Filter>
@@ -69,7 +66,43 @@
     <ClInclude Include="TcpServer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="EchoServer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeHandler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>头文件\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="LogFile.h">
+      <Filter>头文件\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="LogThread.h">
+      <Filter>头文件\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="FileUtil.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="SafeQueue.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="SigProcess.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="SnBuffer.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeWheel.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadThread.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -82,6 +115,39 @@
     </ClCompile>
     <ClCompile Include="FileUtil.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EchoServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SigProcess.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TcpServer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Epoll.cpp">
+      <Filter>源文件\Reactor</Filter>
+    </ClCompile>
+    <ClCompile Include="Reactor.cpp">
+      <Filter>源文件\Reactor</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketUtil.cpp">
+      <Filter>源文件\Reactor</Filter>
+    </ClCompile>
+    <ClCompile Include="LogFile.cpp">
+      <Filter>源文件\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>源文件\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="LogThread.cpp">
+      <Filter>源文件\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadThread.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeHandler.cpp">
+      <Filter>源文件\Reactor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

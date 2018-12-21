@@ -3,7 +3,11 @@
 #include"ReadThread.h"
 
 
-ReadThread::ReadThread(int listenfd, std::mutex* mutex) :spReactor_(new Reactor),listenFd_(listenfd),mutex_(mutex)
+ReadThread::ReadThread(int listenfd, MessageQueuePtr spQueue, std::mutex* mutex) 
+	:spReactor_(new Reactor),
+	spQueue_(spQueue),
+	listenFd_(listenfd),
+	mutex_(mutex)
 {
 }
 void ReadThread::init()
@@ -13,8 +17,8 @@ void ReadThread::init()
 	TimeEventPtr spTimeEvent = timeWheel_.getEvent(1000);
 	EventHandlerPtr spEventHandler(new AcceptHandler(listenFd_, spReactor_, mutex_));
 	spReactor_->AddHandler(spEventHandler);
-	EventHandlerPtr spTimeEventHandler(new TimeHandler(spTimeEvent, spReactor_));
-	spReactor_->AddHandler(spTimeEventHandler);
+	//EventHandlerPtr spTimeEventHandler(new TimeHandler(spTimeEvent, spReactor_));
+	//spReactor_->AddHandler(spTimeEventHandler);
 }
 void ReadThread::loop()
 {
@@ -38,6 +42,7 @@ void ReadThread::removeClient(int sock)
 }
 void ReadThread::onTimerRemoveClient(ConnectSessionPtr spConnect)
 {
+	LOG_INFO("kick ass" + std::to_string(spConnect->getFd()));
 	spConnect->close();
 	connectionManager_.erase(spConnect->getFd());
 }

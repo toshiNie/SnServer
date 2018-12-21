@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(SnServer)
-add_definitions(-g -DSA_RESTART)
+set (CMAKE_CXX_COMPILER "g++")
+add_definitions(-O0 -g -DSA_RESTART)
 add_compile_options(-std=c++11)
 link_libraries(pthread)
 add_executable(SnServer
@@ -16,6 +17,8 @@ add_executable(SnServer
 	LogThread.cpp
 	LogFile.cpp
 	TimeHandler.cpp
+	Global.cpp
 	ReadThread.cpp
+	Session.cpp
 	FileUtil.cpp)
 

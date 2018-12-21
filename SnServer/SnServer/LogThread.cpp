@@ -1,7 +1,7 @@
 #include"stdafx.h"
 #include"LogThread.h"
 
-LogThread::LogThread() :log_(NsLog::Instance())
+LogThread::LogThread() :log_(NsLog::Instance()),isCancel_(false)
 {
 
 }
@@ -36,11 +36,12 @@ void LogThread::run()
 {
 	spThread_ = std::shared_ptr<std::thread>(new std::thread(
 		[&]() {
-		while (true)
+		while (!isCancel_)
 		{
 			auto pair = std::move(logQueue_.pop());
 			log_.AddLog(pair.first, pair.second.c_str(), pair.second.size());
 		}
+		std::cout << "exit" << std::endl;
 	}
 	));
 }

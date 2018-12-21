@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "LogThread.h"
 #include "Reactor.h"
+#include "Global.h"
 
 void Reactor::AddHandler(EventHandlerPtr spEventHandler)
 {
-	LOG_INFO(std::to_string(mapHandler_.size()));
 	//std::lock_guard<std::mutex> lg(mutex_);
 	auto iter = mapHandler_.find(spEventHandler->GetFd());
 	if (iter == mapHandler_.end())

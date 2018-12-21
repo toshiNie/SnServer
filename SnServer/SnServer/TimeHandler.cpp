@@ -58,7 +58,7 @@ void TimeHandler::ReadHandle()
 	int r = read(spTimeEvent_->getFd(), (void*)&time, sizeof(time));
 	if (r > 0)
 	{
-		std::cout << time << std::endl;
+		//std::cout << time << std::endl;
 	}
 	(*spTimeEvent_)();
 	if (spTimeEvent_->getCancleFlag())
@@ -71,7 +71,6 @@ void TimeHandler::ReadHandle()
 		spTimeEvent_->setTime(spTimeEvent_->getInterval());
 		spReactor_->AddHandler(shared_from_this());
 	}
-
 }
 int TimeHandler::GetFd() 
 {

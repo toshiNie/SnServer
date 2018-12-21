@@ -20,7 +20,8 @@ public:
 	//	condNotEmpty_.notify_one();
 	//}
 
-	void push(T&& x)
+
+	void push(T x)
 	{
 		std::unique_lock<std::mutex> lck(mutex_);
 		while (isFullWithoutLock())

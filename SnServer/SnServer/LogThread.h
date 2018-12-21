@@ -23,9 +23,14 @@ public:
 	void Flush();
 
 	void join();
+	void setCancel()
+	{
+		isCancel_ = true;
+	}
 private:
 	std::shared_ptr<std::thread> spThread_;
 	SafeQueue<std::pair<std::string, std::string>> logQueue_;
+	bool isCancel_;
 	NsLog& log_;
 };
 

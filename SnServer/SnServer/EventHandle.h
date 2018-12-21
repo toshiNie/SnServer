@@ -6,9 +6,7 @@
 enum EventType
 {
 	ReadEvent = 0x01,
-	WriteEvent = 0x02,
-	ErrorEvent = 0x04,
-	EventMask = 0xff
+	WriteEvent = 0x02
 };
 typedef unsigned int Event;
 class EventHandler: public std::enable_shared_from_this<EventHandler>

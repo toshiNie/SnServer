@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "EchoServer.h"
+#include "TcpServer.h"
 #include "TimeHandler.h"
 #include "ReadThread.h"
 
@@ -7,7 +8,7 @@
 void AcceptHandler::ReadHandle()
 {
 	LOG_INFO("accept handle");
-	std::lock_guard <std::mutex> lg(*mutex_);
+	//std::lock_guard <std::mutex> lg(*mutex_);
 	int sock = ::accept(sock_, NULL, NULL);
 	LOG_INFO("accept sock: " + std::to_string(sock));
 	if (sock < 0)
@@ -16,14 +17,16 @@ void AcceptHandler::ReadHandle()
 	}
 	socketutil::make_socket_non_blocking(sock);
 
-	ConnectSessionPtr spConnect(new ConnectSession(sock));
+	ConnectSessionPtr spConnect(new ConnectSession(sock, spReactor_));
+
 	auto spThisThread = spReactor_-> wpThisThead_.lock();
 	spThisThread->getTimeWheel().addSock(spConnect);
 	spThisThread->getManager().insert(std::make_pair(sock,spConnect));
 
-	EventHandlerPtr spReadHandler(new EchoReadHandler(sock, spReactor_));
+	EventHandlerPtr spReadHandler(new NomalEventHandler(spConnect, spReactor_));
+	spReadHandler->SetHandlerType(ReadEvent);
 	spReactor_->AddHandler(spReadHandler);
-	LOG_INFO("add read handler:" + std::to_string(sock));
+	LOG_INFO("AddReadHandler: " + std::to_string(sock));
 }
 
 void EchoReadHandler::ReadHandle()
@@ -64,7 +67,6 @@ void EchoReadHandler::ReadHandle()
 		}
 	}
 	readBuffer_.append(buffer.data(), len);
-	LOG_INFO(readBuffer_.getbuffer());
 	EventHandlerPtr spHander(new EchoWriteHandler(sock_, spReactor_, std::move(readBuffer_)));
 	spReactor_->AddHandler(spHander);
 }
@@ -77,7 +79,7 @@ void EchoWriteHandler::WriteHandle()
 	auto spThisThread = spReactor_->wpThisThead_.lock();
 	while (writedBuffer_.size() > 0)
 	{
-		w = ::write(sock_, (void*)writedBuffer_.getbuffer(), writedBuffer_.size());
+		w = ::write(sock_, (void*)writedBuffer_.getReadbuffer(), writedBuffer_.size());
 		LOG_INFO("write size:" + std::to_string(w));
 		if (w < 0)
 		{
@@ -112,7 +114,7 @@ void EchoServer::run()
 
 	for (int i = 0; i < 3; ++i)
 	{
-		ReadThreadPtr spReadThread(new ReadThread(listtenSocket_.GetSockFd(),&mutex_));
+		ReadThreadPtr spReadThread(new ReadThread(listtenSocket_.GetSockFd(),nullptr,&mutex_));
 		threads_.insert(std::make_pair(ThreadPtr(new std::thread(std::bind(&ReadThread::run, spReadThread))), spReadThread));
 	}
 

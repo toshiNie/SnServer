@@ -6,9 +6,8 @@ void processCtrl_C(int sig)
 {
 	printf("ctrl_C:%d\n",errno);
 	LogThread::getInstance().Flush();
-	exit(0);
+	::kill(getpid(), 9);
 }
-
 
 void registeSig()
 {
