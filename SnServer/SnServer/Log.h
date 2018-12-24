@@ -6,17 +6,69 @@
 class NsLog
 {
 public:
-	static NsLog& Instance();
+	enum LOG_LEVEL
+	{
+		DEBUG,
+		INFO,
+		WARNING,
+		ERROR,
+		FATEL
+	};
+	struct LogPackage
+	{
+		std::string strModule;
+		LOG_LEVEL logLevel;
+		std::string timeStamp;
+		std::string logMessage;
+		std::string threadId;
 
-	void AddLogFile(const std::string& strMoudle, const std::string& strBaseFileName);
+		const char * levelToString(LOG_LEVEL level)
+		{
+			switch (level)
+			{
+			case INFO:
+				return "[INFO]";
+			case WARNING:
+				return "[WARNING]";
+			case ERROR:
+				return "[ERROR]";
+			case FATEL:
+				return "[FATEL]";
+			default:
+				return "[UNKNOWEN]";
+			}
 
-	void AddLogFile(const std::string& strMoudle, const FILE* file);
-
-	void AddLog(const std::string& strMoudle, const char* data, size_t size);
-
-	void Flush();
+		}
+		std::string toString()
+		{
+			std::stringstream ss;
+			ss << timeStamp << " "
+				<< levelToString(logLevel) << " "
+				<< threadId << " "
+				<< logMessage << "\n";
+			return ss.str();
+		}
+	};
+	typedef std::shared_ptr<LogPackage> LogPackagePtr;
+public:
+	NsLog() :level_(INFO) {}
+	static NsLog& instance();
+	void addLogFile(const std::string& strMoudle, const std::string& strBaseFileName , int size = 100*1024*1024);
+	void addLogFile(const std::string& strMoudle, const FILE* file);
+	void addLog(const std::string& strMoudle, const char* data, size_t size);
+	void addLog(LogPackagePtr spLogPackage);
+	void flush();
+	void setLevel(LOG_LEVEL level)
+	{
+		level_ = level;
+	}
+	LOG_LEVEL getLevel()
+	{
+		return level_;
+	}
 private:
 	std::map<std::string, LogFilePtr> mapLogFile_;
+	LOG_LEVEL level_;
 	std::mutex mutex_;
 };
 

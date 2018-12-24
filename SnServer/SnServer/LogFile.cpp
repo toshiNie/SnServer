@@ -34,19 +34,16 @@ void LogFile::Append(const char* data, size_t size)
 }
 void LogFile::AppendUnlock(const char* data, size_t size)
 {
-	std::string strTimeTemp = NsTime::GetStrTimeStamp();
-	spWriteableFile_->Append(strTimeTemp.c_str(), strTimeTemp.size());
-	spWriteableFile_->Append(data, size);
-	size_ += (size + strTimeTemp.size());
-	flushSize_ += (size + strTimeTemp.size());
+	spWriteableFile_->append(data, size);
+	size_ += size;
+	flushSize_ += size;
 
 	if (flushSize_ > BufferSize)
 	{
 		//std::cout << "flush" << std::endl;
-		spWriteableFile_->Flush();
+		spWriteableFile_->flush();
 		flushSize_ = 0;
 	}
-
 	if (size_ >= rollSize_)
 	{
 		RollFile();
@@ -55,20 +52,39 @@ void LogFile::AppendUnlock(const char* data, size_t size)
 }
 void LogFile::Flush()
 {
-	spWriteableFile_->Flush();
+	spWriteableFile_->flush();
 }
 
 
 bool LogFile::RollFile()
 {
-	std::string strFileName = strBaseName_ + NsTime::GetStrTimeStamp(".%Y-%m-%d.") + std::to_string(fileNames_.size());
-	spWriteableFile_.reset(new PosixWritableFile(strFileName.c_str()));
-	if (!spWriteableFile_->Open())
+	std::string strFileName;
+	while (true)
+	{
+		strFileName = strBaseName_ + NsTime::GetStrTimeStamp(".%Y-%m-%d.") + std::to_string(fileNames_.size());
+		spWriteableFile_.reset(new PosixWritableFile(strFileName.c_str()));
+		if (spWriteableFile_->isExist())
+		{
+			if (spWriteableFile_->size() < rollSize_)
+			{
+				break;
+			}
+			else
+			{
+				fileNames_.push_back(std::move(strFileName));
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
+	if (!spWriteableFile_->open())
 	{
 		std::cout << "open log file error" << std::endl;
 		return false;
 	}
 	fileNames_.push_back(std::move(strFileName));
-	size_ = 0;
+	size_ = spWriteableFile_->size();
 	return true;
 }

@@ -10,18 +10,19 @@ NomalEventHandler::NomalEventHandler(ConnectSessionPtr spConnect, ReactorPtr spR
 }
 void NomalEventHandler::ReadHandle()
 {
-	LOG_INFO("Readhanlde");
+	LOG_DEBUG("Readhanlde");
+	spThread_->getTimeWheel().resetSock(spConnect_);
 	std::vector<char> buffer(READ_SIZE);
 	int r = ::read(spConnect_->getFd(), (void*)buffer.data(), READ_SIZE);
 	if (r < 0)
 	{
 		if (errno == EAGAIN)
 		{
-			r = 0;
-			spReactor_->Mod(spConnect_->getFd(), ReadEvent);
+			//r = 0;
+			//spReactor_->Mod(spConnect_->getFd(), ReadEvent);
 			return;
 		}
-		LOG_INFO("read error: " + std::to_string(errno));
+		LOG_ERROR("read error: " + std::to_string(errno));
 		spThread_->removeClient(spConnect_->getFd());
 	}
 	else if (r == 0)
@@ -31,6 +32,12 @@ void NomalEventHandler::ReadHandle()
 	}
 	else
 	{
+		if (spConnect_->readbuffer_.size() == 0 && *(int*)buffer.data() == r)
+		{
+			spConnect_->onMessage(buffer);
+			return;
+		}
+
 		spConnect_->readbuffer_.append(buffer.data(), r);
 		spConnect_->onRead();
 		//spReactor_->Mod(spConnect_->getFd(), ReadEvent);
@@ -38,21 +45,21 @@ void NomalEventHandler::ReadHandle()
 	return;
 }
 
-void NomalEventHandler::WriteHandle() 
+void NomalEventHandler::WriteHandle()
 {
-	//if (spConnect_->writebuffer_.size() == 0)
-	//{
-	//	spReactor_->Mod(spConnect_->getFd(), ReadEvent);
-	//	return;
-	//}
-	LOG_INFO("writeHandle :" + std::to_string(spConnect_->writebuffer_.size()));
+	LOG_DEBUG("TRYLOCK");
+	std::lock_guard<std::mutex> lg(spConnect_->mutex_);
+	spThread_->getTimeWheel().resetSock(spConnect_);
+	LOG_DEBUG("GETLOCK");
 	int w = ::write(spConnect_->getFd(), spConnect_->writebuffer_.getReadbuffer(), spConnect_->writebuffer_.size());
+	LOG_INFO("writen size: " + std::to_string(w));
 	if (w < 0)
 	{
 		if (errno == EAGAIN)
 		{
 			return;
 		}
+		LOG_ERROR("write error: " + std::to_string(errno));
 	}
 	else
 	{
@@ -61,9 +68,8 @@ void NomalEventHandler::WriteHandle()
 			spReactor_->Mod(spConnect_->getFd(), ReadEvent);
 		}
 	}
-	LOG_INFO("writeHandle :" + std::to_string(w));
-	LOG_INFO("writeHandle :" + std::to_string(spConnect_->writebuffer_.size()));
-	//std::this_thread::sleep_for(std::chrono::seconds(1));
+	LOG_DEBUG("REALISELOCK");
+
 }
 
 void NomalEventHandler::ErrorHandle()
@@ -79,7 +85,7 @@ int NomalEventHandler::GetFd()
 
 
 
-TcpServer::TcpServer() :spQueue_(MessageQueuePtr(new MessageQueue())), pollNum_(2), workerNum_(1)
+TcpServer::TcpServer() :spQueue_(MessageQueuePtr(new MessageQueue())), pollNum_(3), workerNum_(2)
 {
 }
 TcpServer::~TcpServer()
@@ -92,7 +98,7 @@ void TcpServer::run()
 	listtenSocket_.BindAddress(listenAddress_);
 	if (!listtenSocket_.Listen(1024))
 	{
-		LOG_INFO("listen failed");
+		LOG_ERROR("listen failed");
 		return;
 	}
 	socketutil::make_socket_non_blocking(listtenSocket_.GetSockFd());

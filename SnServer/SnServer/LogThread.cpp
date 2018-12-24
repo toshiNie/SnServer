@@ -1,7 +1,7 @@
 #include"stdafx.h"
 #include"LogThread.h"
 
-LogThread::LogThread() :log_(NsLog::Instance()),isCancel_(false)
+LogThread::LogThread() :log_(NsLog::instance()),isCancel_(false)
 {
 
 }
@@ -17,19 +17,22 @@ LogThread::~LogThread()
 
 }
 
-void LogThread::put(const std::string &module, const std::string&& log)
+void LogThread::put(NsLog::LogPackagePtr  upLogPackage)
 {
-	logQueue_.push(std::pair<std::string, std::string>(module, log));
+	if (!isCancel_)
+	{
+		logQueue_.push(std::move(upLogPackage));
+	}
 }
 
 void LogThread::addLogFile(const std::string &strMoudle, const std::string& strFileName)
 {
-	log_.AddLogFile(strMoudle, strFileName);
+	log_.addLogFile(strMoudle, strFileName);
 }
 
 void LogThread::addLogFile(const std::string &strMoudle, const FILE* flie)
 {
-	log_.AddLogFile(strMoudle, flie);
+	log_.addLogFile(strMoudle, flie);
 }
 
 void LogThread::run()
@@ -38,10 +41,9 @@ void LogThread::run()
 		[&]() {
 		while (!isCancel_)
 		{
-			auto pair = std::move(logQueue_.pop());
-			log_.AddLog(pair.first, pair.second.c_str(), pair.second.size());
+			auto spMessage = std::move(logQueue_.pop());
+			log_.addLog(spMessage);
 		}
-		std::cout << "exit" << std::endl;
 	}
 	));
 }
@@ -51,7 +53,7 @@ void LogThread::Flush()
 	while (!logQueue_.isEmpty())
 	{
 	}
-	log_.Flush();
+	log_.flush();
 }
 
 void LogThread::join()

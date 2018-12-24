@@ -14,9 +14,9 @@ int main()
 	LogThread& thread = LogThread::getInstance();
 	registeSig();
 	//FILE * file = fopen("/dev/null","w");	
-	FILE * file = fopen("/dev/stdout","we");
-	thread.addLogFile("info", file);
-	//thread.addLogFile("info", "ns.log");
+	//FILE * file = fopen("/dev/stdout","we");
+	//thread.addLogFile("info", file);
+	thread.addLogFile("info", "/root/ns.log");
 	thread.run();
 	TcpServer server;
 	server.run();

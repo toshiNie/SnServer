@@ -16,7 +16,6 @@ void AcceptHandler::ReadHandle()
 		return;
 	}
 	socketutil::make_socket_non_blocking(sock);
-
 	ConnectSessionPtr spConnect(new ConnectSession(sock, spReactor_));
 
 	auto spThisThread = spReactor_-> wpThisThead_.lock();

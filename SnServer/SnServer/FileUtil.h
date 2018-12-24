@@ -3,11 +3,14 @@
 #pragma warning(disable:4996)
 class WritableFile {
 public:
-	WritableFile() { }
+	WritableFile() {}
 	virtual ~WritableFile() {};
-	virtual bool Open() = 0;
-	virtual bool Append(const char* data,size_t size) = 0;
-	virtual bool Flush() = 0;
+	virtual bool open() = 0;
+	virtual bool append(const char* data,size_t size) = 0;
+	virtual bool flush() = 0;
+	virtual bool isExist() = 0;
+	virtual int size() = 0;
+
 private:
 	WritableFile(const WritableFile&);
 	void operator=(const WritableFile&);
@@ -33,16 +36,18 @@ public:
 			::fclose(file_);
 		}
 	}
-	bool Open()
+	bool open()
 	{
 		file_ = ::fopen(strFileName_.c_str(), "ae");
+
 		if (file_ != NULL)
 		{
 			::setbuffer(file_, buffer_, sizeof(buffer_));
 		}
+
 		return file_ != NULL;
 	}
-	bool Append(const char* data, size_t size)
+	bool append(const char* data, size_t size)
 	{
 		//size_t s = fwrite(data, 1, size, file_);
 		size_t s = fwrite_unlocked(data, 1, size, file_);
@@ -50,11 +55,26 @@ public:
 			return false;
 		return true;
 	}
-	bool Flush()
+	bool flush()
 	{
 		if (::fflush(file_) != 0)
 			return false;
 		return true;
+	}
+	bool isExist()
+	{
+		if (access(strFileName_.c_str(), F_OK) ==  -1)
+		{
+			return false;
+		}
+		return true;
+	}
+	int size()
+	{
+		struct stat statbuf;
+		bzero(&statbuf, sizeof(statbuf));
+		stat(strFileName_.c_str(), &statbuf);
+		return statbuf.st_size;
 	}
 private:
 	FILE* file_;

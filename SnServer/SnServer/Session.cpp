@@ -65,5 +65,5 @@ void ConnectSession::onMessage(std::vector<char>& buffer)
 	spMessage->buffer.swap(buffer);
 	spMessage->size = spMessage->buffer.size();
 	spMessage->spConnect = shared_from_this();
-	spReactor_->wpThisThead_.lock()->getQueue()->push(spMessage);
+	spReactor_->wpThisThead_.lock()->getQueue()->push(std::move(spMessage));
 }

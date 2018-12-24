@@ -17,8 +17,8 @@ void ReadThread::init()
 	TimeEventPtr spTimeEvent = timeWheel_.getEvent(1000);
 	EventHandlerPtr spEventHandler(new AcceptHandler(listenFd_, spReactor_, mutex_));
 	spReactor_->AddHandler(spEventHandler);
-	//EventHandlerPtr spTimeEventHandler(new TimeHandler(spTimeEvent, spReactor_));
-	//spReactor_->AddHandler(spTimeEventHandler);
+	EventHandlerPtr spTimeEventHandler(new TimeHandler(spTimeEvent, spReactor_));
+	spReactor_->AddHandler(spTimeEventHandler);
 }
 void ReadThread::loop()
 {
@@ -35,6 +35,7 @@ void ReadThread::run()
 }
 void ReadThread::removeClient(int sock)
 {
+	spReactor_->Remove(sock);
 	auto spConnect = connectionManager_[sock];
 	spConnect->close();
 	timeWheel_.remove(spConnect);
@@ -43,6 +44,7 @@ void ReadThread::removeClient(int sock)
 void ReadThread::onTimerRemoveClient(ConnectSessionPtr spConnect)
 {
 	LOG_INFO("kick ass" + std::to_string(spConnect->getFd()));
+	spReactor_->Remove(spConnect->getFd());
 	spConnect->close();
 	connectionManager_.erase(spConnect->getFd());
 }

@@ -9,7 +9,7 @@ public:
 	{
 		if (buffer_.size() < index_ + size)
 		{
-			buffer_.resize(buffer_.size() * 2 + size);
+			buffer_.resize(index_ + size);
 		}
 		memcpy(buffer_.data() + index_, data, size);
 		index_ += size;
@@ -38,20 +38,22 @@ public:
 	{
 		if (len > size())
 		{
-			return -1;
+			buffer.swap(buffer_);
+			index_ = 0;
+			return buffer.size();
 		}
 		memcpy(buffer.data(), buffer_.data(), len);
 		size_t remainSize = size() - len;
 		std::vector<char> temp(buffer_.size());
 		memcpy(temp.data(), buffer_.data() + len, remainSize);
 		buffer_.swap(temp);
-		index_ = 0;
+		index_ = buffer_.size();
 		return len;
 	}
 
 	void reset()
 	{
-		std::vector<char> vec(1024);
+		std::vector<char> vec(buffer_.size());
 		buffer_.swap(vec);
 		index_ = HeadSize;
 	}

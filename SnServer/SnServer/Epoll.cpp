@@ -14,24 +14,24 @@ int NsEpoll::WaitEvent(std::map<int, EventHandlerPtr> eventHandles, int timeout)
 	{
 		for (int i = 0; i < num; ++i)
 		{
-			LOG_INFO("epoll event: " +std::to_string(vecEvents[i].events));
-			LOG_INFO("fd: "+std::to_string(vecEvents[i].data.fd));
+			//LOG_INFO("epoll event: " +std::to_string(vecEvents[i].events));
+			//LOG_INFO("fd: "+std::to_string(vecEvents[i].data.fd));
 			int handle = vecEvents[i].data.fd;
 			if (vecEvents[i].events & EPOLLERR)
 			{
-				LOG_INFO("errorEvent");
+				LOG_DEBUG("errorEvent");
 				eventHandles[handle]->ErrorHandle();
 			}
 			else
 			{
 				if ((EPOLLIN | EPOLLPRI | EPOLLRDHUP ) & vecEvents[i].events)
 				{
-					LOG_INFO("readEvent");
+					LOG_DEBUG("readEvent");
 					eventHandles[handle]->ReadHandle();
 				}
 				if ((EPOLLOUT ) & vecEvents[i].events)
 				{
-					LOG_INFO("writeEvent");
+					LOG_DEBUG("writeEvent");
 					eventHandles[handle]->WriteHandle();
 				}
 			}
@@ -43,29 +43,31 @@ void NsEpoll::AddEvent(int handle, Event type)
 {
 	//LOG_INFO(__FUNCTION__);
 	epoll_event stEvt;
+	bzero(&stEvt, sizeof(stEvt));
 	stEvt.data.fd = handle;
 	if (type & EventType::ReadEvent)
 	{
-		LOG_INFO("EPOLLIN");
-		stEvt.events = EPOLLIN;
+		LOG_DEBUG("EPOLLIN");
+		stEvt.events |= EPOLLIN;
 	}
 	if (type &EventType::WriteEvent)
 	{
-		//LOG_INFO("EPOLLOUT");
-		stEvt.events = EPOLLOUT;
+		LOG_DEBUG("EPOLLOUT");
+		stEvt.events |= EPOLLOUT;
 	}
 	if (0 != epoll_ctl(epollFd_, EPOLL_CTL_ADD, handle, &stEvt))
 	{
-		LOG_INFO("add fail");
+		LOG_ERROR("add fail");
 	}
 	++eventSize_;
 }
 bool NsEpoll::Remove(int handle)
 {
-	struct epoll_event ev;
-	if (0 != epoll_ctl(epollFd_, EPOLL_CTL_DEL, handle, &ev))
+	struct epoll_event stEvt;
+	bzero(&stEvt, sizeof(stEvt));
+	if (0 != epoll_ctl(epollFd_, EPOLL_CTL_DEL, handle, &stEvt))
 	{
-		LOG_INFO("del fail" + std::to_string(errno));
+		LOG_ERROR("del fail" + std::to_string(errno));
 		return false;
 	}
 	--eventSize_;
@@ -76,20 +78,21 @@ bool NsEpoll::Mod(int handle, Event event)
 {
 	//LOG_INFO(__FUNCTION__);
 	epoll_event stEvt;
+	bzero(&stEvt, sizeof(stEvt));
 	stEvt.data.fd = handle;
 	if (event & EventType::ReadEvent)
 	{
-		LOG_INFO("Mod EPOLLIN");
-		stEvt.events = EPOLLIN;
+		LOG_DEBUG("Mod EPOLLIN");
+		stEvt.events |= EPOLLIN;
 	}
 	if (event &EventType::WriteEvent)
 	{
-		LOG_INFO("Mod EPOLLOUT");
-		stEvt.events = EPOLLOUT;
+		LOG_DEBUG("Mod EPOLLOUT");
+		stEvt.events |= EPOLLOUT;
 	}
 	if (0 != epoll_ctl(epollFd_, EPOLL_CTL_MOD, handle, &stEvt))
 	{
-		LOG_INFO("epoll_ctl error" + std::to_string(errno));
+		LOG_ERROR("epoll_ctl error" + std::to_string(errno));
 		return false;
 	}
 	return true;

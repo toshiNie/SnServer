@@ -151,9 +151,12 @@
     <ClInclude Include="Epoll.h" />
     <ClInclude Include="EventHandle.h" />
     <ClInclude Include="FileUtil.h" />
+    <ClInclude Include="Global.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LogFile.h" />
     <ClInclude Include="LogThread.h" />
+    <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageProcessThread.h" />
     <ClInclude Include="noncopyable.h" />
     <ClInclude Include="Reactor.h" />
     <ClInclude Include="ReadThread.h" />
@@ -172,6 +175,9 @@
     <ClInclude Include="TimeWheel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Global.cpp" />
+    <ClCompile Include="MessageProcessThread.cpp" />
+    <ClCompile Include="Session.cpp" />
     <ClCompile Include="EchoServer.cpp" />
     <ClCompile Include="Epoll.cpp" />
     <ClCompile Include="FileUtil.cpp" />

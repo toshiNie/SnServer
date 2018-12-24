@@ -25,10 +25,12 @@ public:
 
 	SnBuffer readbuffer_;
 	SnBuffer writebuffer_;
+	std::mutex mutex_;
 private:
 	int sock_;
 	int index_;
 	ReactorPtr spReactor_;
+	
 };
 typedef std::shared_ptr<ConnectSession>  ConnectSessionPtr;
 

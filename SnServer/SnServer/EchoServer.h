@@ -24,7 +24,7 @@ public:
 	virtual void WriteHandle();
 	virtual void ErrorHandle()
 	{
-		LOG_INFO("error");
+		LOG_ERROR("error");
 		spReactor_->Remove(sock_);
 		::close(sock_);
 	};
@@ -50,7 +50,7 @@ public:
 	virtual void ReadHandle();
 	virtual void ErrorHandle()
 	{
-		LOG_INFO("error");
+		LOG_ERROR("error");
 		spReactor_->Remove(sock_);
 		::close(sock_);
 	};
@@ -82,7 +82,7 @@ public:
 	virtual void ReadHandle();
 	virtual void ErrorHandle()
 	{
-		LOG_INFO("error");
+		LOG_ERROR("error");
 		spReactor_->Remove(sock_);
 		::close(sock_);
 	};
