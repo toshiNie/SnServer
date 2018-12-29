@@ -6,7 +6,7 @@
 #include"SocketUtil.h"
 #include"SnBuffer.h"
 #include"LogThread.h"
-#include"EventHandle.h"
+#include"EventHandler.h"
 #include "Session.h"
 #include "TimeWheel.h"
 #include "ReadThread.h"
@@ -16,19 +16,19 @@ class EchoWriteHandler :public EventHandler
 public:
 	EchoWriteHandler(int fd, ReactorPtr spReactor, SnBuffer&& buffer) :sock_(fd), spReactor_(spReactor), writedBuffer_(std::move(buffer))
 	{
-		SetHandlerType(WriteEvent);
+		setHandlerType(WriteEvent);
 	}
 	~EchoWriteHandler()
 	{
 	}
-	virtual void WriteHandle();
-	virtual void ErrorHandle()
+	virtual void writeHandle();
+	virtual void errorHandle()
 	{
 		LOG_ERROR("error");
-		spReactor_->Remove(sock_);
+		spReactor_->remove(sock_);
 		::close(sock_);
 	};
-	virtual int GetFd() { return sock_; }
+	virtual int getFd() { return sock_; }
 
 private:
 	SnBuffer writedBuffer_;
@@ -42,19 +42,19 @@ class EchoReadHandler :public EventHandler
 public:
 	EchoReadHandler(int fd, ReactorPtr spReactor) :sock_(fd), readBuffer_(1024), spReactor_(spReactor)
 	{
-		SetHandlerType(ReadEvent);
+		setHandlerType(ReadEvent);
 	}
 	~EchoReadHandler()
 	{
 	}
-	virtual void ReadHandle();
-	virtual void ErrorHandle()
+	virtual void readHandle();
+	virtual void errorHandle()
 	{
 		LOG_ERROR("error");
-		spReactor_->Remove(sock_);
+		spReactor_->remove(sock_);
 		::close(sock_);
 	};
-	virtual int GetFd() { return sock_; }
+	virtual int getFd() { return sock_; }
 private:
 	int readSize()
 	{
@@ -66,31 +66,6 @@ private:
 	SnBuffer readBuffer_;
 	int sock_;
 	ReactorPtr spReactor_;
-};
-
-
-class AcceptHandler : public EventHandler
-{
-public:
-	AcceptHandler(int fd, ReactorPtr spReactor, std::mutex* mutex  = NULL) :sock_(fd), spReactor_(spReactor), mutex_(mutex)
-	{
-		SetHandlerType(ReadEvent);
-	}
-	~AcceptHandler()
-	{
-	}
-	virtual void ReadHandle();
-	virtual void ErrorHandle()
-	{
-		LOG_ERROR("error");
-		spReactor_->Remove(sock_);
-		::close(sock_);
-	};
-	virtual int GetFd() { return sock_; }
-private:
-	int sock_;
-	ReactorPtr spReactor_;
-	std::mutex *mutex_;
 };
 
 

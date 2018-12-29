@@ -33,7 +33,7 @@ Sigfunc* addSignal(int signo, Sigfunc* func)
 	act.sa_handler = func;
 	sigemptyset(&act.sa_mask);
 	act.sa_flags = 0;
-	if (signo = SIGALRM)
+	if (signo == SIGALRM)
 	{
 #ifdef SA_INTERRUPT
 		act.sa_flags |= SA_INTERRUPT;
@@ -49,7 +49,7 @@ Sigfunc* addSignal(int signo, Sigfunc* func)
 	std::cout << ret << std::endl;
 	if (ret < 0)
 	{
-		return NULL;
+		return nullptr;
 	}
 	return oact.sa_handler;
 }

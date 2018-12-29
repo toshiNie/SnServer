@@ -42,7 +42,7 @@ void LOG(T& log, NsLog::LOG_LEVEL level)
 	{
 		return;
 	}
-	NsLog::LogPackagePtr spLogpackage(new NsLog::LogPackage);
+	auto spLogpackage = std::make_shared<NsLog::LogPackage>();
 	std::stringstream ss;
 	ss << std::this_thread::get_id();
 	spLogpackage->threadId = ss.str();

@@ -146,18 +146,23 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AcceptHandler.h" />
     <ClInclude Include="EchoServer.h" />
     <ClInclude Include="Env.h" />
     <ClInclude Include="Epoll.h" />
-    <ClInclude Include="EventHandle.h" />
+    <ClInclude Include="EventHandler.h" />
     <ClInclude Include="FileUtil.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="HttpRequst.h" />
+    <ClInclude Include="HttpResponse.h" />
+    <ClInclude Include="HttpServer.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LogFile.h" />
     <ClInclude Include="LogThread.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageProcessThread.h" />
     <ClInclude Include="noncopyable.h" />
+    <ClInclude Include="NormalHandler.h" />
     <ClInclude Include="Reactor.h" />
     <ClInclude Include="ReadThread.h" />
     <ClInclude Include="SafeQueue.h" />
@@ -171,12 +176,19 @@
     <ClInclude Include="TcpServer.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="TimeEvent.h" />
     <ClInclude Include="TimeHandler.h" />
     <ClInclude Include="TimeWheel.h" />
+    <ClInclude Include="HttpParser.h" />
+    <ClInclude Include="TreadRAII.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AcceptHandler.cpp" />
     <ClCompile Include="Global.cpp" />
+    <ClCompile Include="HttpParser.cpp" />
+    <ClCompile Include="HttpServer.cpp" />
     <ClCompile Include="MessageProcessThread.cpp" />
+    <ClCompile Include="NormalHandler.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="EchoServer.cpp" />
     <ClCompile Include="Epoll.cpp" />
@@ -196,7 +208,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TcpServer.cpp" />
+    <ClCompile Include="TimeEvent.cpp" />
     <ClCompile Include="TimeHandler.cpp" />
+    <ClCompile Include="TimeWheel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

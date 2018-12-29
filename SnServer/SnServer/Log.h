@@ -26,6 +26,8 @@ public:
 		{
 			switch (level)
 			{
+			case DEBUG:
+				return "[DEBUG]";
 			case INFO:
 				return "[INFO]";
 			case WARNING:

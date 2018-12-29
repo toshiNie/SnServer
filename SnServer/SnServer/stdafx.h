@@ -7,9 +7,6 @@
 #ifndef STDAFX_H_
 #define STDAFX_H_
 
-#include "targetver.h"
-
-
 #include<iostream>
 #include<sstream>
 #include<string>
@@ -18,14 +15,15 @@
 #include<vector>
 #include<memory>
 #include<functional>
-#include <chrono>
+#include<chrono>
 #include<ctime>
 #include<iomanip>
 #include<thread>
-#include <mutex> 
+#include<mutex> 
 #include<queue>
 #include<list>
-#include <condition_variable>
+#include<condition_variable>
+#include<cctype>
 
 //#ifdef WIN32
 //#include<winsock.h>
@@ -42,8 +40,6 @@
 #include <arpa/inet.h>
 #include <sys/stat.h>
 //#endif // !WIN32
-
-
 #include <stdio.h>
-// TODO:  在此处引用程序需要的其他头文件
+
 #endif

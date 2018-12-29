@@ -2,10 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 project(SnServer)
 set (CMAKE_CXX_COMPILER "g++")
 add_definitions(-O2 -g -DSA_RESTART)
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 link_libraries(pthread)
 add_executable(SnServer
-	SnServer.cpp
 	stdafx.cpp
 	Reactor.cpp
 	Epoll.cpp
@@ -21,5 +20,12 @@ add_executable(SnServer
 	ReadThread.cpp
 	Session.cpp
 	MessageProcessThread.cpp
+	HttpServer.cpp
+	HttpParser.cpp
+  TimeWheel.cpp
+  AcceptHandler.cpp
+  NormalHandler.cpp
+  TimeEvent.cpp
+	SnServer.cpp
 	FileUtil.cpp)
 

@@ -21,7 +21,7 @@ private:
 class PosixWritableFile :public WritableFile
 {
 public:
-	PosixWritableFile(const char* fileName) :strFileName_(fileName), file_(NULL)
+	PosixWritableFile(const char* fileName) :strFileName_(fileName), file_(nullptr)
 	{
 		
 	}
@@ -40,12 +40,12 @@ public:
 	{
 		file_ = ::fopen(strFileName_.c_str(), "ae");
 
-		if (file_ != NULL)
+		if (file_ != nullptr)
 		{
 			::setbuffer(file_, buffer_, sizeof(buffer_));
 		}
 
-		return file_ != NULL;
+		return file_ != nullptr;
 	}
 	bool append(const char* data, size_t size)
 	{

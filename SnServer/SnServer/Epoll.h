@@ -12,10 +12,10 @@ public:
 	{
 		::close(epollFd_);
 	}
-	int WaitEvent(std::map<int, EventHandlerPtr> eventHandles, int timeout);
-	void AddEvent(int handle, Event type);
-	bool Remove(int handle);
-	bool Mod(int handle, Event event);
+	int waitEvent(std::map<int, EventHandlerPtr> eventHandles, int timeout);
+	void addEvent(int handle, Event type);
+	bool remove(int handle);
+	bool mod(int handle, Event event);
 private:
 	int eventSize_;;
 	int epollFd_;

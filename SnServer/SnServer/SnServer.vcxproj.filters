@@ -43,6 +43,9 @@
     <Filter Include="头文件\Thread">
       <UniqueIdentifier>{e640ae57-b723-42e1-8cb4-99345dcb304b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Http">
+      <UniqueIdentifier>{592a6330-4735-44e9-9527-eadf934ff2d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -64,9 +67,6 @@
       <Filter>头文件\Reactor</Filter>
     </ClInclude>
     <ClInclude Include="Epoll.h">
-      <Filter>头文件\Reactor</Filter>
-    </ClInclude>
-    <ClInclude Include="EventHandle.h">
       <Filter>头文件\Reactor</Filter>
     </ClInclude>
     <ClInclude Include="Reactor.h">
@@ -129,6 +129,33 @@
     <ClInclude Include="Time.h">
       <Filter>头文件\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="HttpServer.h">
+      <Filter>头文件\Server</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpRequst.h">
+      <Filter>头文件\Http</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpParser.h">
+      <Filter>头文件\Http</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpResponse.h">
+      <Filter>头文件\Http</Filter>
+    </ClInclude>
+    <ClInclude Include="TreadRAII.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeEvent.h">
+      <Filter>头文件\Reactor</Filter>
+    </ClInclude>
+    <ClInclude Include="AcceptHandler.h">
+      <Filter>头文件\Reactor</Filter>
+    </ClInclude>
+    <ClInclude Include="EventHandler.h">
+      <Filter>头文件\Reactor</Filter>
+    </ClInclude>
+    <ClInclude Include="NormalHandler.h">
+      <Filter>头文件\Reactor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -180,6 +207,24 @@
       <Filter>源文件\Thread</Filter>
     </ClCompile>
     <ClCompile Include="Session.cpp">
+      <Filter>源文件\Reactor</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpParser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpServer.cpp">
+      <Filter>源文件\Server</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeWheel.cpp">
+      <Filter>源文件\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeEvent.cpp">
+      <Filter>源文件\Reactor</Filter>
+    </ClCompile>
+    <ClCompile Include="AcceptHandler.cpp">
+      <Filter>源文件\Reactor</Filter>
+    </ClCompile>
+    <ClCompile Include="NormalHandler.cpp">
       <Filter>源文件\Reactor</Filter>
     </ClCompile>
   </ItemGroup>

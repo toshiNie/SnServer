@@ -1,6 +1,8 @@
 #pragma once
 #ifndef CONNECTSESSION_H_
 #define CONNECTSESSION_H_
+#include"SnBuffer.h"
+#include"Reactor.h"
 
 class ConnectSession: public std::enable_shared_from_this<ConnectSession>
 {
@@ -9,7 +11,7 @@ public:
 
 	void setIndex(int index);
 
-	int getIndex();
+	int& getRefIndex();
 
 	int getFd();
 
@@ -17,16 +19,11 @@ public:
 
 	void close();
 
-	void onRead();
-
-	bool onWrite(int len);
-
-	void onMessage(std::vector<char>& buffer);
-
 	SnBuffer readbuffer_;
 	SnBuffer writebuffer_;
+
 	std::mutex mutex_;
-private:
+protected:
 	int sock_;
 	int index_;
 	ReactorPtr spReactor_;

@@ -1,24 +1,32 @@
 #include "stdafx.h"
 #include "LogThread.h"
+#include"ReadThread.h"
 #include "Reactor.h"
-#include "Global.h"
 
-void Reactor::AddHandler(EventHandlerPtr spEventHandler)
+Reactor::Reactor() :spNsEpoll_(std::make_shared<NsEpoll>())
+{
+}
+void Reactor::addHandler(EventHandlerPtr spEventHandler)
 {
 	//std::lock_guard<std::mutex> lg(mutex_);
-	auto iter = mapHandler_.find(spEventHandler->GetFd());
+	LOG_DEBUG("add sock:" + std::to_string(spEventHandler->getFd()));
+	for (auto& item : mapHandler_)
+	{
+		LOG_DEBUG(std::to_string(item.first));
+	}
+	auto iter = mapHandler_.find(spEventHandler->getFd());
 	if (iter == mapHandler_.end())
 	{
-		mapHandler_[spEventHandler->GetFd()] = spEventHandler;
-		spNsEpoll_->AddEvent(spEventHandler->GetFd(), spEventHandler->GetHandlerType());
+		mapHandler_[spEventHandler->getFd()] = spEventHandler;
+		spNsEpoll_->addEvent(spEventHandler->getFd(), spEventHandler->getHandlerType());
 	}
 	else
 	{
-		mapHandler_[spEventHandler->GetFd()] = spEventHandler;
-		spNsEpoll_->Mod(spEventHandler->GetFd(), spEventHandler->GetHandlerType());
+		mapHandler_[spEventHandler->getFd()] = spEventHandler;
+		spNsEpoll_->mod(spEventHandler->getFd(), spEventHandler->getHandlerType());
 	}
 }
-void Reactor::Remove(int fd)
+void Reactor::remove(int fd)
 {
 	//std::lock_guard<std::mutex> lg(mutex_);
 	LOG_INFO(__FUNCTION__);
@@ -26,20 +34,20 @@ void Reactor::Remove(int fd)
 	if (iter != mapHandler_.end())
 	{
 		mapHandler_.erase(iter);
-		spNsEpoll_->Remove(fd);
+		spNsEpoll_->remove(fd);
 	}
 }
 
-void Reactor::Mod(int fd, Event event)
+void Reactor::mod(int fd, Event event)
 {
 	//std::lock_guard<std::mutex> lg(mutex_);
 	auto iter = mapHandler_.find(fd);
 	if (iter != mapHandler_.end())
 	{
-		spNsEpoll_->Mod(fd, event);
+		spNsEpoll_->mod(fd, event);
 	}
 }
-void Reactor::Loop(int timeout)
+void Reactor::loop(int timeout)
 {
-	spNsEpoll_->WaitEvent(mapHandler_, timeout);
+	spNsEpoll_->waitEvent(mapHandler_, timeout);
 }

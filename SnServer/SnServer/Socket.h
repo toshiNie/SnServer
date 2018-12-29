@@ -44,7 +44,7 @@ public:
 	}
 	int Accept()
 	{
-		int fd = ::accept(fd_, NULL, NULL);
+		int fd = ::accept(fd_, nullptr, nullptr);
 		return fd;
 	}
 	~Socket()

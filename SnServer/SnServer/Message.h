@@ -1,12 +1,15 @@
 #pragma once
 #include"Session.h"
 #include"SafeQueue.h"
-struct MessagePackage
+class MessagePackage
 {
+public:
 	int size;
 	std::vector<char> buffer;
 	ConnectSessionPtr spConnect;
+	virtual ~MessagePackage() {}
+
 };
-typedef std::shared_ptr<MessagePackage> MessagePackagePtr;
-typedef SafeQueue<MessagePackagePtr> MessageQueue;
-typedef std::shared_ptr<SafeQueue<MessagePackagePtr> > MessageQueuePtr;
+using MessagePackagePtr = std::shared_ptr<MessagePackage>;
+using MessageQueue = SafeQueue<MessagePackagePtr>;
+using MessageQueuePtr = std::shared_ptr<MessageQueue>;

@@ -47,7 +47,7 @@ public:
 		std::vector<char> temp(buffer_.size());
 		memcpy(temp.data(), buffer_.data() + len, remainSize);
 		buffer_.swap(temp);
-		index_ = buffer_.size();
+		index_ = remainSize;
 		return len;
 	}
 
@@ -61,4 +61,19 @@ private:
 	std::vector<char> buffer_;
 	size_t index_;
 	size_t headSize_;
+};
+
+
+
+class Buffer
+{
+public:
+	Buffer() {}
+
+	void peek(int size)
+	{
+	}
+private:
+	int readIndex_;
+	int writeIndex_;
 };
