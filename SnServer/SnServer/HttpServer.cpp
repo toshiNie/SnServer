@@ -1,5 +1,5 @@
 #include"stdafx.h"
-#include"LogThread.h"
+#include"AsyncLog.h"
 #include"SnBuffer.h"
 #include"Reactor.h"
 #include"Socket.h"
@@ -23,9 +23,12 @@ void HttpHandler::readHandle()
 {
 	LOG_DEBUG("Readhanlde");
 	spThread_->getTimeWheel().resetSock(spConnect_->getFd(), spConnect_->getRefIndex());
-	std::vector<char> buffer(READ_SIZE);
-	int r = ::read(spConnect_->getFd(), (void*)buffer.data(), READ_SIZE);
-
+	//std::vector<char> buffer(READ_SIZE);
+	char buffer[READ_SIZE] = {0};
+	//int r = ::read(spConnect_->getFd(), (void*)buffer.data(), READ_SIZE);
+	int remainLen = spConnect_->readbuffer_.getRemainSize();
+	int r = socketutil::readv2(spConnect_->getFd(), spConnect_->readbuffer_.getRemainbuffer(), remainLen, buffer, sizeof(buffer));
+	LOG_INFO("remain size" + std::to_string(remainLen));
 	LOG_INFO("read size" + std::to_string(r));
 	if (r < 0)
 	{
@@ -43,7 +46,15 @@ void HttpHandler::readHandle()
 	}
 	else
 	{
-		spConnect_->readbuffer_.append(buffer.data(), r);
+		if (r > remainLen)
+		{
+			spConnect_->readbuffer_.peek(remainLen);
+			spConnect_->readbuffer_.append(buffer,r - remainLen);
+		}
+		else
+		{
+			spConnect_->readbuffer_.peek(r);
+		}
 		onRead();
 	}
 	return;

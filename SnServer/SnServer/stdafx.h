@@ -39,6 +39,7 @@
 #include <sys/epoll.h>  
 #include <arpa/inet.h>
 #include <sys/stat.h>
+#include <netinet/tcp.h> 
 //#endif // !WIN32
 #include <stdio.h>
 

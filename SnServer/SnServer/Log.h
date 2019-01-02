@@ -53,7 +53,7 @@ public:
 	};
 	typedef std::shared_ptr<LogPackage> LogPackagePtr;
 public:
-	NsLog() :level_(INFO) {}
+	NsLog();
 	static NsLog& instance();
 	void addLogFile(const std::string& strMoudle, const std::string& strBaseFileName , int size = 100*1024*1024);
 	void addLogFile(const std::string& strMoudle, const FILE* file);

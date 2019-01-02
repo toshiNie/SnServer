@@ -1,6 +1,6 @@
 #include"stdafx.h"
 #include"EventHandler.h"
-#include"LogThread.h"
+#include"AsyncLog.h"
 #include"SnBuffer.h"
 #include"Reactor.h"
 #include"Session.h"

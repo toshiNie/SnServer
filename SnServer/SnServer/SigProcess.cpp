@@ -1,11 +1,11 @@
 #include"stdafx.h"
-#include"LogThread.h"
+#include"AsyncLog.h"
 #include"SigProcess.h"
 
 void processCtrl_C(int sig)
 {
 	printf("ctrl_C:%d\n",errno);
-	LogThread::getInstance().Flush();
+	AsyncLog::getInstance().Flush();
 	::kill(getpid(), 9);
 }
 

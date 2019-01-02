@@ -158,7 +158,7 @@
     <ClInclude Include="HttpServer.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LogFile.h" />
-    <ClInclude Include="LogThread.h" />
+    <ClInclude Include="AsyncLog.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageProcessThread.h" />
     <ClInclude Include="noncopyable.h" />
@@ -195,7 +195,7 @@
     <ClCompile Include="FileUtil.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="LogFile.cpp" />
-    <ClCompile Include="LogThread.cpp" />
+    <ClCompile Include="AsyncLog.cpp" />
     <ClCompile Include="Reactor.cpp" />
     <ClCompile Include="ReadThread.cpp" />
     <ClCompile Include="SigProcess.cpp" />

@@ -3,14 +3,14 @@
 
 #include "stdafx.h"
 #include "Time.h"
-#include "LogThread.h"
+#include "AsyncLog.h"
 #include "TcpServer.h"
 #include "SigProcess.h"
 
 int main()
 {
 	std::cout << NsTime::GetStrTimeStamp() << std::endl;
-	LogThread& thread = LogThread::getInstance();
+	AsyncLog& thread = AsyncLog::getInstance();
 	registeSig();
 	//FILE * file = fopen("/dev/null","w");	
 	//FILE * file = fopen("/dev/stdout","we");

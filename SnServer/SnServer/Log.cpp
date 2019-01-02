@@ -7,6 +7,7 @@ NsLog& NsLog::instance()
 	static NsLog nsLog;
 	return nsLog;
 }
+NsLog::NsLog() :level_(ERROR) {}
 
 void NsLog::addLogFile(const std::string& strMoudle, const std::string& strBaseFileName, int size)
 {

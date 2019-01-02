@@ -1,6 +1,6 @@
 #include"stdafx.h"
 #include"SocketUtil.h"
-#include"LogThread.h"
+#include"AsyncLog.h"
 #include"ReadThread.h"
 #include"HttpServer.h"
 #include"AcceptHandler.h"

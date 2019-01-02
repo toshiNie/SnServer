@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "LogThread.h"
+#include "AsyncLog.h"
 #include"ReadThread.h"
 #include "Reactor.h"
 

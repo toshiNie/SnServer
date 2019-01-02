@@ -1,6 +1,6 @@
 #include"stdafx.h"
 #include "EventHandler.h"
-#include "LogThread.h"
+#include "AsyncLog.h"
 #include "Epoll.h"
 
 int NsEpoll::waitEvent(std::map<int, EventHandlerPtr> eventHandles, int timeout)

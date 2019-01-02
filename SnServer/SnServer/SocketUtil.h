@@ -1,13 +1,13 @@
 #pragma once
 #ifndef SOCKETUTIL_H_
 #define SOCKETUTIL_H_
-#include"stdafx.h"
 namespace socketutil
 {
 	int make_socket_non_blocking(int sfd);
-	ssize_t writen(int sfd, void *vptr, size_t n);
-	size_t readutil(int sfd, void *vptr, const char end);
-	ssize_t readn(int sfd, void *vptr, size_t n);
-	ssize_t readline(int sfd, void* vptr, size_t maxsize);
+	bool setReuseAddr(int fd);
+	bool setReusePort(int fd);
+	bool setTcpNoDelay(int fd);
+	bool setkeepAlive(int fd);
+	ssize_t readv2(int fd, char* buffer1, size_t size1, char* buffer2, size_t size2);
 }
 #endif

@@ -35,7 +35,7 @@ using HttpConnectSessionPtr = std::shared_ptr<HttpConnectSession>;
 
 class HttpHandler : public EventHandler
 {
-	enum { READ_SIZE  = 4096 };
+	enum { READ_SIZE  = 1024 };
 public:
 	HttpHandler(HttpConnectSessionPtr spConnect, ReactorPtr spReactor);
 

@@ -5,7 +5,7 @@
 #include"Socket.h"
 #include"SocketUtil.h"
 #include"SnBuffer.h"
-#include"LogThread.h"
+#include"AsyncLog.h"
 #include"EventHandler.h"
 #include "Session.h"
 #include "TimeWheel.h"

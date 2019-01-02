@@ -1,7 +1,7 @@
 #include"stdafx.h"
 #include "SocketUtil.h"
 
-namespace socketutil 
+namespace socketutil
 {
 	int make_socket_non_blocking(int sfd)
 	{
@@ -19,111 +19,37 @@ namespace socketutil
 		}
 		return 0;
 	}
-	ssize_t writen(int sfd, void *vptr, size_t n)
+	bool setReuseAddr(int fd)
 	{
-		size_t nleft;
-		ssize_t nwrite;
-		char *ptr = (char*)vptr;
-		nleft = n;
-		while (nleft > 0)
-		{
-			nwrite = write(sfd, ptr, nleft);
-			if (nwrite <= 0)
-			{
-				if (nwrite < 0 && errno == EINTR)
-					nwrite = 0;
-				else
-					return -1;
-			}
-			nleft -= nwrite;
-			ptr += nwrite;
-		}
-		return n;
+		bool bReuseAddr;
+		return ::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &bReuseAddr, sizeof(bReuseAddr)) == 0;
 	}
 
-	size_t readutil(int sfd, void *vptr, const char end)
+	bool setReusePort(int fd)
 	{
-		size_t size = 0;
-		size_t nread;
-		char *ptr = (char*)vptr;
-		while (true)
-		{
-			if (nread = read(sfd, ptr, 1) <= 0)
-			{
-				std::cout << std::to_string(nread) << std::endl;
-				if (nread < 0 && errno == EINTR)
-					nread = 0;
-				else
-					return -1;
-			}
-			std::cout << ":" + std::to_string(nread) << std::endl;
-			if (*ptr == end)
-			{
-				return size + 1;
-			}
-			size++;
-			ptr += nread;
-		}
-		return 0;
+		bool bReuseAddr;
+		return ::setsockopt(fd, SOL_SOCKET, SO_REUSEPORT, &bReuseAddr, sizeof(bReuseAddr)) == 0;
+	}
+	bool setTcpNoDelay(int fd)
+	{
+		int iOption = 1;
+		return ::setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &iOption, sizeof(iOption)) == 0;
 	}
 
-	ssize_t readn(int sfd, void *vptr, size_t n)
+	bool setkeepAlive(int fd)
 	{
-		size_t nleft;
-		ssize_t nread;
-		char *ptr = (char*)vptr;
-		nleft = n;
-		while (nleft > 0)
-		{
-			if (nread = read(sfd, ptr, nleft) < 0)
-			{
-				if (errno == EINTR)
-					continue;
-				else
-					return -1;
-			}
-			else if (nread == 0)
-			{
-				return 0;
-			}
-			nleft -= nread;
-			ptr += nread;
-		}
-		return n - nleft;
+		int iOption = 1;
+		return ::setsockopt(fd, IPPROTO_TCP, SO_KEEPALIVE, &iOption, sizeof(iOption)) == 0;
 	}
-	
 
-	ssize_t readline(int sfd, void* vptr, size_t maxsize)
+	ssize_t readv2(int fd, char* buffer1, size_t size1, char* buffer2, size_t size2)
 	{
-		ssize_t  rc;
-		char c, *ptr;
-		ptr = (char*)vptr;
-		int i;
-		for (i = 1; i < maxsize; i++)
-		{
-			if ((rc = read(sfd, &c, 1)) == 1)
-			{
-				*ptr++ = c;
-				if (c == '\n')
-					break;
-			}
-			else if (rc == 0)
-			{
-				*ptr = 0;
-				return (i - 1);
-			}
-			else
-			{
-				if (errno == EINTR)
-				{
-					std::cout << "EINTR" << std::endl;;
-					i--;
-					continue;
-				}
-				return -1;
-			}
-		}
-		*ptr = 0;
-		return i;
+		struct iovec iov[2];
+		iov[0].iov_base = buffer1;
+		iov[0].iov_len = size1;
+		iov[1].iov_base = buffer2;
+		iov[1].iov_len = size2;
+		return ::readv(fd, iov, 2);
 	}
+
 }

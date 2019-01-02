@@ -1,5 +1,5 @@
 #include"stdafx.h"
-#include"LogThread.h"
+#include"AsyncLog.h"
 #include"Session.h"
 #include"AcceptHandler.h"
 #include"ReadThread.h"

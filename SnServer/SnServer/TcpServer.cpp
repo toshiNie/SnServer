@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "LogThread.h"
+#include "AsyncLog.h"
 #include "SnBuffer.h"
 #include "TcpServer.h"
 
@@ -11,7 +11,7 @@ TcpServer::~TcpServer()
 }
 void TcpServer::run()
 {
-	listenAddress_.strIp_ = "127.0.0.1";
+	listenAddress_.strIp_ = "0.0.0.0";
 	listenAddress_.port = 4321;
 	listtenSocket_.BindAddress(listenAddress_);
 	if (!listtenSocket_.Listen(1024))
