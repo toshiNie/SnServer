@@ -12,11 +12,11 @@ public:
 	void writeHandle() override;
 	void errorHandle() override;
 	int getFd() override;
-private:
+protected:
 	virtual void onRead();
-	virtual void onMessage(std::vector<char>& buffer);
+	virtual void onMessage();
 	virtual bool onWrite(int len);
-private:
+protected:
 	ConnectSessionPtr spConnect_;
 	ReactorPtr spReactor_;
 	std::shared_ptr<ReadThread> spThread_;

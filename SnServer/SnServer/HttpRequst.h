@@ -140,10 +140,24 @@ public:
 	{
 		return content_;
 	}
+	
+	std::vector<std::string>& getPaths()
+	{
+		return paths_;
+	}
+	std::map<std::string, std::string>& getParams()
+	{
+		return params_;
+	}
 private:
 	Method method_;
 	Version version_;
 	std::string url_;
+
+	std::vector<std::string> paths_;
+	std::map<std::string, std::string> params_;
+
+
 	std::map<std::string, std::string> header_;
 	int contentLength_;
 	std::vector<char> content_;

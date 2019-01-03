@@ -75,6 +75,13 @@ public:
 		//std::cout << "3." << index_ << ":" << remainSize_ << ":" << buffer_.size() << ":" << buffer_.capacity() << ":" << len << std::endl;;
 	}
 
+	size_t expand()
+	{
+		buffer_.resize(index_ * 2);
+		remainSize_ = buffer_.capacity() - index_;
+		return remainSize_;
+	}
+
 	void reset()
 	{
 		std::vector<char> vec(buffer_.size());

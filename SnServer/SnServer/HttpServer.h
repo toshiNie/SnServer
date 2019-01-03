@@ -1,6 +1,7 @@
 #pragma once
 #include"EventHandler.h"
 #include"HttpRequst.h"
+#include"NormalHandler.h"
 #include"Message.h"
 
 
@@ -33,7 +34,8 @@ public:
 };
 using HttpConnectSessionPtr = std::shared_ptr<HttpConnectSession>;
 
-class HttpHandler : public EventHandler
+class HttpHandler
+	: public EventHandler
 {
 	enum { READ_SIZE  = 1024 };
 public:
@@ -59,4 +61,21 @@ private:
 	HttpConnectSessionPtr spConnect_;
 	ReactorPtr spReactor_;
 	std::shared_ptr<ReadThread> spThread_;
+};
+
+
+class HttpNormalHandler : public NomalEventHandler
+{
+public:
+	HttpNormalHandler(HttpConnectSessionPtr spConnect, ReactorPtr spReactor);
+
+private:
+	void onRead();
+
+	void onMessage();
+
+	bool onWrite(int len);
+private:
+	HttpConnectSessionPtr spHttpConnect_;
+
 };

@@ -12,8 +12,13 @@ void NomalEventHandler::readHandle()
 {
 	LOG_DEBUG("Readhanlde");
 	spThread_->getTimeWheel().resetSock(spConnect_->getFd(), spConnect_->getRefIndex());
-	std::vector<char> buffer(READ_SIZE);
-	int r = ::read(spConnect_->getFd(), (void*)buffer.data(), READ_SIZE);
+	int remainSize = spConnect_->readbuffer_.getRemainSize();
+	if (remainSize == 0)
+	{
+		remainSize = spConnect_->readbuffer_.expand();
+	}
+	//int r = ::read(spConnect_->getFd(), (void*)buffer.data(), READ_SIZE);
+	int r = ::read(spConnect_->getFd(), spConnect_->readbuffer_.getRemainbuffer(), remainSize);
 	if (r < 0)
 	{
 		if (errno == EAGAIN)
@@ -33,13 +38,7 @@ void NomalEventHandler::readHandle()
 	else
 	{
 		LOG_DEBUG("read buffer size: " + std::to_string(spConnect_->readbuffer_.size()));
-		if (spConnect_->readbuffer_.size() == 0 && *(int*)buffer.data() == r)
-		{
-			onMessage(buffer);
-			return;
-		}
-
-		spConnect_->readbuffer_.append(buffer.data(), r);
+		spConnect_->readbuffer_.peek(r);
 		onRead();
 		//spReactor_->mod(spConnect_->getFd(), ReadEvent);
 	}
@@ -91,16 +90,15 @@ void NomalEventHandler::onRead()
 	int len = *(int*)spConnect_->readbuffer_.getReadbuffer();
 	if (spConnect_->readbuffer_.size() >= sizeof(len) + len)
 	{
-		std::vector<char> buffer(len + sizeof(len));
-		spConnect_->readbuffer_.read(buffer, buffer.size());
-		onMessage(buffer);
+		onMessage();
 	}
 }
-void NomalEventHandler::onMessage(std::vector<char>& buffer)
+void NomalEventHandler::onMessage()
 {
-	LOG_DEBUG(buffer.data() + sizeof(int));
+	int len = *(int*)spConnect_->readbuffer_.getReadbuffer();
 	auto spMessage = std::make_shared<MessagePackage>();
-	spMessage->buffer.swap(buffer);
+	spMessage->buffer.reserve(len + sizeof(len));
+	spConnect_->readbuffer_.read(spMessage->buffer, len + sizeof(len));
 	spMessage->size = spMessage->buffer.size();
 	spMessage->spConnect = spConnect_;
 	spReactor_->wpThisThead_.lock()->getQueue()->push(std::move(spMessage));
