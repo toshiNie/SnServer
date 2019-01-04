@@ -12,27 +12,27 @@ LogFile::LogFile(const std::string& strBaseName, const size_t rollSize)
 
 }
 LogFile::LogFile(const FILE* file)
-	:spWriteableFile_(new PosixWritableFile(file)),
+	:spWriteableFile_(std::make_shared<PosixWritableFile>(file)),
 	rollSize_(-1), needCreate_(false),
 	size_(0),
 	flushSize_(0)
 {
 
 }
-bool LogFile::Create()
+bool LogFile::create()
 {
 	if (needCreate_)
 	{
-		return RollFile();
+		return rollFile();
 	}
 	return true;
 }
-void LogFile::Append(const char* data, size_t size)
+void LogFile::append(const char* data, size_t size)
 {
 	//std::lock_guard<std::mutex> lock(mutex_);
-	AppendUnlock(data, size);
+	appendUnlock(data, size);
 }
-void LogFile::AppendUnlock(const char* data, size_t size)
+void LogFile::appendUnlock(const char* data, size_t size)
 {
 	spWriteableFile_->append(data, size);
 	size_ += size;
@@ -46,23 +46,23 @@ void LogFile::AppendUnlock(const char* data, size_t size)
 	}
 	if (size_ >= rollSize_)
 	{
-		RollFile();
+		rollFile();
 	}
 	//todo 
 }
-void LogFile::Flush()
+void LogFile::flush()
 {
 	spWriteableFile_->flush();
 }
 
 
-bool LogFile::RollFile()
+bool LogFile::rollFile()
 {
 	std::string strFileName;
 	while (true)
 	{
 		strFileName = strBaseName_ + NsTime::GetStrTimeStamp(".%Y-%m-%d.") + std::to_string(fileNames_.size());
-		spWriteableFile_.reset(new PosixWritableFile(strFileName.c_str()));
+		spWriteableFile_ = std::make_shared<PosixWritableFile>(strFileName.c_str());
 		if (spWriteableFile_->isExist())
 		{
 			if (spWriteableFile_->size() < rollSize_)
@@ -84,7 +84,7 @@ bool LogFile::RollFile()
 		std::cout << "open log file error" << std::endl;
 		return false;
 	}
-	fileNames_.push_back(std::move(strFileName));
+	fileNames_.emplace_back(std::move(strFileName));
 	size_ = spWriteableFile_->size();
 	return true;
 }

@@ -13,14 +13,13 @@ void MessageProcessThread::run()
 {
 	while (auto spMessage = spMessageQueue_->pop())
 	{
-		/*LOG_INFO(spMessage->buffer.data() + sizeof(int));
-		std::lock_guard<std::mutex> lg(spMessage->spConnect->mutex_);
-		spMessage->spConnect->writebuffer_.append(spMessage->buffer.data() + sizeof(int), spMessage->size - sizeof(int));
-		spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent);*/
+		//LOG_INFO(spMessage->buffer.data() + sizeof(int));
+		//std::lock_guard<std::mutex> lg(spMessage->spConnect->mutex_);
+		//spMessage->spConnect->writebuffer_.append(spMessage->buffer.data() + sizeof(int), spMessage->size - sizeof(int));
+		//spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent);
 
 		HttpMessagePackagePtr spHttpMessage = std::dynamic_pointer_cast<HttpMessagePackage>(spMessage);
 		LOG_INFO(spHttpMessage->httpRequset.getContent().data());
-
 		HttpResponse resp;
 		resp.setCode(HttpResponse::C200);
 		resp.setContent("hello world");

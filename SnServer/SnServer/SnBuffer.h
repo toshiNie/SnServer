@@ -1,10 +1,13 @@
 #pragma once
 #include"stdafx.h"
-class SnBuffer
+class SnBufferOld
 {
 	enum {HeadSize = 0};
 public:
-	SnBuffer(size_t size = 1024) :buffer_(size), index_(HeadSize), headSize_(HeadSize),remainSize_(size){}
+	SnBufferOld(size_t size = 1024) :index_(HeadSize), headSize_(HeadSize),remainSize_(size), bufferSize_(size)
+	{
+		buffer_.reserve(size);
+	}
 
 	void append(const char* data, size_t size)
 	{
@@ -27,7 +30,7 @@ public:
 		//std::cout << "2." << index_ << ":" << remainSize_ << ":" << buffer_.size() << ":" << buffer_.capacity() << ":" << size << std::endl;
 	}
 
-	SnBuffer(SnBuffer && rvl)
+	SnBufferOld(SnBufferOld && rvl)
 	{
 		buffer_.swap(rvl.buffer_);
 		index_ = rvl.index_;
@@ -66,7 +69,8 @@ public:
 		}
 		memcpy(buffer.data(), buffer_.data(), len);
 		size_t remainSize = size() - len;
-		std::vector<char> temp(remainSize);
+		std::vector<char> temp;
+		temp.reserve(remainSize > bufferSize_ ? remainSize:bufferSize_);
 		memcpy(temp.data(), buffer_.data() + len, remainSize);
 		buffer_.swap(temp);
 		index_ = remainSize;
@@ -77,16 +81,15 @@ public:
 
 	size_t expand()
 	{
-		buffer_.resize(index_ * 2);
+		buffer_.reserve(index_ * 2);
 		remainSize_ = buffer_.capacity() - index_;
 		return remainSize_;
 	}
 
 	void reset()
 	{
-		std::vector<char> vec(buffer_.size());
-		buffer_.swap(vec);
-		index_ = HeadSize;
+		buffer_.clear();
+		index_ = 0;
 		remainSize_ = buffer_.capacity();
 	}
 private:
@@ -94,19 +97,80 @@ private:
 	size_t index_;
 	size_t headSize_;
 	size_t remainSize_;
+	size_t bufferSize_;
 };
 
 
 
-class Buffer
+class SnBuffer
 {
 public:
-	Buffer() {}
-
-	void peek(int size)
+	SnBuffer(size_t size = 1024) : readIndex_(0),writeIndex_(0),buffer_(size)
 	{
+
+	}
+
+	void append(const char* data, size_t size)
+	{
+		if (buffer_.size() - writeIndex_ < size)
+		{
+			buffer_.resize(buffer_.size() + size);
+		}
+		memcpy(buffer_.data() + writeIndex_, data, size);
+		writeIndex_ += size;
+	}
+	size_t size()
+	{
+		return writeIndex_ - readIndex_;
+	}
+	size_t getRemainSize()
+	{
+		return buffer_.size() - writeIndex_;
+	}
+	
+	char * getReadbuffer()
+	{
+		return buffer_.data() + readIndex_;
+	}
+
+	char * getRemainbuffer()
+	{
+		return buffer_.data() + writeIndex_;
+	}
+
+	void peek(size_t size)
+	{
+		writeIndex_ += size;
+	}
+
+	void consumHead(size_t size)
+	{
+		readIndex_ += size;
+	}
+
+	int read(std::vector<char> &buffer, int len)
+	{
+		memcpy(buffer.data(), buffer_.data() + readIndex_, len);
+		readIndex_ += len;
+		if (readIndex_ == writeIndex_)
+		{
+			readIndex_ = writeIndex_ = 0;
+		}
+		return len;
+	}
+	void reset()
+	{
+		buffer_.clear();
+		readIndex_ = writeIndex_ = 0;
+	}
+	size_t expand()
+	{
+		buffer_.resize(buffer_.size() * 2);
+		return buffer_.size() - writeIndex_;
 	}
 private:
-	int readIndex_;
-	int writeIndex_;
+	std::vector<char> buffer_;
+	size_t readIndex_;
+	size_t writeIndex_;
+
 };

@@ -19,7 +19,6 @@ int main()
 	thread.run();
 	TcpServer server;
 	server.run();
-	thread.join();
     return 0;
 }
 

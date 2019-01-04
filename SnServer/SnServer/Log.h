@@ -6,7 +6,7 @@
 class NsLog
 {
 public:
-	enum LOG_LEVEL
+	enum class LogLevel
 	{
 		DEBUG,
 		INFO,
@@ -17,24 +17,24 @@ public:
 	struct LogPackage
 	{
 		std::string strModule;
-		LOG_LEVEL logLevel;
+		LogLevel logLevel;
 		std::string timeStamp;
 		std::string logMessage;
 		std::string threadId;
 
-		const char * levelToString(LOG_LEVEL level)
+		const char * levelToString(LogLevel level)
 		{
 			switch (level)
 			{
-			case DEBUG:
+			case LogLevel::DEBUG:
 				return "[DEBUG]";
-			case INFO:
+			case LogLevel::INFO:
 				return "[INFO]";
-			case WARNING:
+			case LogLevel::WARNING:
 				return "[WARNING]";
-			case ERROR:
+			case LogLevel::ERROR:
 				return "[ERROR]";
-			case FATEL:
+			case LogLevel::FATEL:
 				return "[FATEL]";
 			default:
 				return "[UNKNOWEN]";
@@ -60,21 +60,19 @@ public:
 	void addLog(const std::string& strMoudle, const char* data, size_t size);
 	void addLog(LogPackagePtr spLogPackage);
 	void flush();
-	void setLevel(LOG_LEVEL level)
+	void setLevel(LogLevel level)
 	{
 		level_ = level;
 	}
-	LOG_LEVEL getLevel()
+	LogLevel getLevel()
 	{
 		return level_;
 	}
 private:
 	std::map<std::string, LogFilePtr> mapLogFile_;
-	LOG_LEVEL level_;
+	LogLevel level_;
 	std::mutex mutex_;
 };
 
-//#define LOG_INFO(A)  NsLog::Instance().AddLog("info",A,strlen(A));
-//#define LOG_INFO(A)  std::cout<<A<<std::endl;
 
 #endif

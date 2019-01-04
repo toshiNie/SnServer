@@ -7,25 +7,23 @@ NsLog& NsLog::instance()
 	static NsLog nsLog;
 	return nsLog;
 }
-NsLog::NsLog() :level_(INFO) {}
+NsLog::NsLog() :level_(LogLevel::INFO) {}
 
 void NsLog::addLogFile(const std::string& strMoudle, const std::string& strBaseFileName, int size)
 {
 	if (mapLogFile_.find(strMoudle) == mapLogFile_.end())
 	{
-		auto ptr = LogFilePtr(new LogFile(strBaseFileName, size));
-		if (ptr->Create())
+		auto ptr = std::make_shared<LogFile>(strBaseFileName, size);
+		if (ptr->create())
 			mapLogFile_[strMoudle] = ptr;
-
 	}
 }
-
 
 void NsLog::addLogFile(const std::string& strMoudle, const FILE* file)
 {
 	if (mapLogFile_.find(strMoudle) == mapLogFile_.end())
 	{
-		auto ptr = LogFilePtr(new LogFile(file));
+		auto ptr = std::make_shared<LogFile>(file);
 		mapLogFile_[strMoudle] = ptr;
 
 	}
@@ -39,7 +37,7 @@ void NsLog::addLog(const std::string& strMoudle, const char* data, size_t size)
 	{
 		std::stringstream ss;
 		ss << " [" << strMoudle << "] " << data << "\n";
-		iter->second->Append(ss.str().c_str(), ss.str().size());
+		iter->second->append(ss.str().c_str(), ss.str().size());
 	}
 }
 
@@ -49,18 +47,17 @@ void NsLog::addLog(NsLog::LogPackagePtr spLogPackage)
 	{
 		return;
 	}
-	//std::lock_guard<std::mutex> lg(mutex_);
 	auto iter = mapLogFile_.find(spLogPackage->strModule);
 	if (iter != mapLogFile_.end())
 	{
 		std::string  logMessage(spLogPackage->toString());
-		iter->second->Append(logMessage.c_str(), logMessage.size());
+		iter->second->append(logMessage.c_str(), logMessage.size());
 	}
 }
 void NsLog::flush()
 {
-	for (auto it = mapLogFile_.begin(); it != mapLogFile_.end(); it++)
+	for (auto& iter : mapLogFile_)
 	{
-		it->second->Flush();
+		iter.second->flush();
 	}
 }

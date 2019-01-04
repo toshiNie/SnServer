@@ -1,7 +1,8 @@
 #pragma once
 #include"stdafx.h"
 #pragma warning(disable:4996)
-class WritableFile {
+#include"noncopyable.h"
+class WritableFile : public noncopyable{
 public:
 	WritableFile() {}
 	virtual ~WritableFile() {};
@@ -10,10 +11,6 @@ public:
 	virtual bool flush() = 0;
 	virtual bool isExist() = 0;
 	virtual int size() = 0;
-
-private:
-	WritableFile(const WritableFile&);
-	void operator=(const WritableFile&);
 };
 
 
@@ -36,7 +33,7 @@ public:
 			::fclose(file_);
 		}
 	}
-	bool open()
+	bool open() override
 	{
 		file_ = ::fopen(strFileName_.c_str(), "ae");
 
@@ -47,7 +44,7 @@ public:
 
 		return file_ != nullptr;
 	}
-	bool append(const char* data, size_t size)
+	bool append(const char* data, size_t size) override
 	{
 		//size_t s = fwrite(data, 1, size, file_);
 		size_t s = fwrite_unlocked(data, 1, size, file_);
@@ -55,13 +52,13 @@ public:
 			return false;
 		return true;
 	}
-	bool flush()
+	bool flush() override
 	{
 		if (::fflush(file_) != 0)
 			return false;
 		return true;
 	}
-	bool isExist()
+	bool isExist() override
 	{
 		if (access(strFileName_.c_str(), F_OK) ==  -1)
 		{
@@ -69,7 +66,7 @@ public:
 		}
 		return true;
 	}
-	int size()
+	int size() override
 	{
 		struct stat statbuf;
 		bzero(&statbuf, sizeof(statbuf));

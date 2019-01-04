@@ -13,6 +13,11 @@ public:
 	{
 
 	}
+	void move(ThreadRAII&& thread)
+	{
+		action = thread.action;
+		t.swap(thread.t);
+	}
 	~ThreadRAII()
 	{ 
 		if (t.joinable()) { 

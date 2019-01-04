@@ -8,7 +8,6 @@ public:
 	std::vector<char> buffer;
 	ConnectSessionPtr spConnect;
 	virtual ~MessagePackage() {}
-
 };
 using MessagePackagePtr = std::shared_ptr<MessagePackage>;
 using MessageQueue = SafeQueue<MessagePackagePtr>;

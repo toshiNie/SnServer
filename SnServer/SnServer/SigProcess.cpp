@@ -5,8 +5,10 @@
 void processCtrl_C(int sig)
 {
 	printf("ctrl_C:%d\n",errno);
-	AsyncLog::getInstance().Flush();
-	::kill(getpid(), 9);
+	AsyncLog::getInstance().flush();
+	printf("exit\n");
+	exit(0);
+	//kill(getpid(), 9);
 }
 
 void registeSig()
@@ -22,7 +24,7 @@ void blockSIGINT(int signo) {
 	sigprocmask(SIG_BLOCK, &set, NULL);
 }
 
-Sigfunc*  addSig(int sig, Sigfunc* func)
+Sigfunc* addSig(int sig, Sigfunc* func)
 {
 	return signal(sig, func);
 }

@@ -50,6 +50,10 @@ public:
 		std::lock_guard<std::mutex> guard(mutex_);
 		return queue_.size();
 	}
+	std::queue<T>& getQueue()
+	{
+		return queue_;
+	}
 
 private:
 	std::queue<T> queue_;

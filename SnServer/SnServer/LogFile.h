@@ -11,16 +11,16 @@ public:
 
 	LogFile(const FILE* file);
 
-	bool Create();
+	bool create();
 
-	void Append(const char* data, size_t size);
+	void append(const char* data, size_t size);
 
-	void AppendUnlock(const char* data, size_t size);
+	void appendUnlock(const char* data, size_t size);
 
-	void Flush();
+	void flush();
 
 private:
-	bool RollFile();
+	bool rollFile();
 	
 private:
 	std::shared_ptr<WritableFile>  spWriteableFile_;

@@ -25,6 +25,7 @@ void AcceptHandler::readHandle()
 	spThisThread->getManager().insert(std::make_pair(sock, spConnect));
 
 	auto spReadHandler = std::make_shared<HttpNormalHandler>(spConnect, spReactor_);
+	//auto spReadHandler = std::make_shared<HttpHandler>(spConnect, spReactor_);
 
 	spReadHandler->setHandlerType(ReadEvent);
 	spReactor_->addHandler(spReadHandler);

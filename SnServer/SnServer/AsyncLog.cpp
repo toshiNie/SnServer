@@ -37,7 +37,7 @@ void AsyncLog::addLogFile(const std::string &strMoudle, const FILE* flie)
 
 void AsyncLog::run()
 {
-	spThread_ = std::shared_ptr<std::thread>(new std::thread(
+	spThread_ = std::make_unique<ThreadRAII>(ThreadRAII(std::thread(
 		[&]() {
 		while (!isCancel_)
 		{
@@ -45,18 +45,14 @@ void AsyncLog::run()
 			log_.addLog(spMessage);
 		}
 	}
-	));
+	), ThreadRAII::DtorAction::join));
 }
 
-void AsyncLog::Flush()
+void AsyncLog::flush()
 {
-	while (!logQueue_.isEmpty())
+	while (!logQueue_.isEmptySafe())
 	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 	log_.flush();
-}
-
-void AsyncLog::join()
-{
-	spThread_->join();
 }
