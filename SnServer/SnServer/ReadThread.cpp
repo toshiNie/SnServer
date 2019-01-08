@@ -41,7 +41,7 @@ void ReadThread::init()
 	TimeEventPtr spTimeEvent = timeWheel_.getEvent(5000);
 	EventHandlerPtr spTimeEventHandler(new TimeHandler(spTimeEvent, upImpl_->spReactor_));
 	upImpl_->spReactor_->addHandler(spTimeEventHandler);
-	auto spEventHandler = std::make_shared<AcceptHandler<HttpNormalHandler> >(listenFd_, upImpl_->spReactor_, mutex_);
+	auto spEventHandler = std::make_shared<AcceptHandler<HttpNormalHandler> >(listenFd_, upImpl_->spReactor_);
 	upImpl_->spReactor_->addHandler(spEventHandler);
 
 }

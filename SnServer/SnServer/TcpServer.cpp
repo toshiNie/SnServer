@@ -19,7 +19,7 @@ void TcpServer::run()
 		LOG_ERROR("listen failed");
 		return;
 	}
-	socketutil::make_socket_non_blocking(listtenSocket_.GetSockFd());
+	socketutil::setNonblocking(listtenSocket_.GetSockFd());
 	LOG_INFO("listen OK");
 	std::vector<MessageQueuePtr> vecQueue;
 	for (int i = 0; i < pollNum_; ++i)

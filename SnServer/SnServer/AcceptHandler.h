@@ -9,7 +9,7 @@ template<typename HandlerType>
 class AcceptHandler : public EventHandler
 {
 public:
-	AcceptHandler(int fd, ReactorPtr spReactor :sock_(fd), spReactor_(spReactor)
+	AcceptHandler(int fd, ReactorPtr spReactor):sock_(fd), spReactor_(spReactor)
 	{
 		setHandlerType(ReadEvent);
 	}
@@ -35,13 +35,12 @@ public:
 		spReactor_->addHandler(spReadHandler);
 		LOG_INFO("AddReadHandler: " + std::to_string(sock));
 	}
-
 	virtual void errorHandle()
 	{
 		LOG_ERROR("error");
 		spReactor_->remove(sock_);
 		::close(sock_);
-	};
+	}
 	virtual int getFd() { return sock_; }
 private:
 	int sock_;

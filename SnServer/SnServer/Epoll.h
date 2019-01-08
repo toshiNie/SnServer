@@ -17,7 +17,7 @@ public:
 	bool remove(int handle);
 	bool mod(int handle, Event event);
 private:
-	int eventSize_;;
+	int eventSize_;
 	int epollFd_;
 };
 #endif

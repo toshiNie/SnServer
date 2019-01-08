@@ -87,7 +87,7 @@ void EchoServer::run()
 		LOG_INFO("listen failed");
 		return;
 	}
-	socketutil::make_socket_non_blocking(listtenSocket_.GetSockFd());
+	socketutil::setNonblocking(listtenSocket_.GetSockFd());
 	LOG_INFO("listen OK");
 
 	for (int i = 0; i < 3; ++i)
@@ -113,7 +113,7 @@ void EchoServer::acceptThread()
 		std::lock_guard<std::mutex> lg(mutex_);
 		i = i % subReactors_.size();
 		ReactorPtr spReactor = subReactors_[i];
-		socketutil::make_socket_non_blocking(sock);
+		socketutil::setNonblocking(sock);
 		auto spEventHandller = std::make_shared<EchoReadHandler>(sock, spReactor);
 		spReactor->addHandler(spEventHandller);
 		i++;
@@ -124,7 +124,7 @@ void EchoServer::readThread(int threadIndex)
 {
 	LOG_INFO("readThread start");
 	auto spReactor = std::make_shared<Reactor>();
-	auto spAcceptHandler = std::make_shared<AcceptHandler<NomalEventHandler> >(listtenSocket_.GetSockFd(), spReactor, &mutex_);
+	auto spAcceptHandler = std::make_shared<AcceptHandler<NomalEventHandler> >(listtenSocket_.GetSockFd(), spReactor);
 	spReactor->addHandler(spAcceptHandler);
 	while (true)
 	{

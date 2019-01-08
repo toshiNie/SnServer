@@ -36,7 +36,7 @@ namespace socketutil
 		return ::setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, &iOption, sizeof(iOption)) == 0;
 	}
 
-	bool setkeepAlive(int fd)
+	bool setKeepAlive(int fd)
 	{
 		int iOption = 1;
 		return ::setsockopt(fd, IPPROTO_TCP, SO_KEEPALIVE, &iOption, sizeof(iOption)) == 0;
