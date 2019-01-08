@@ -12,7 +12,7 @@ public:
 	{
 		::close(epollFd_);
 	}
-	int waitEvent(std::map<int, EventHandlerPtr> eventHandles, int timeout);
+	int waitEvent(std::map<int, EventHandlerPtr>& eventHandles, int timeout);
 	void addEvent(int handle, Event type);
 	bool remove(int handle);
 	bool mod(int handle, Event event);
@@ -20,5 +20,4 @@ private:
 	int eventSize_;;
 	int epollFd_;
 };
-typedef std::shared_ptr<NsEpoll> NsEpollPtr;
 #endif

@@ -71,7 +71,6 @@ public:
 private:
 	std::map<std::string, std::shared_ptr<LogFile> > mapLogFile_;
 	LogLevel level_;
-	std::mutex mutex_;
 };
 
 

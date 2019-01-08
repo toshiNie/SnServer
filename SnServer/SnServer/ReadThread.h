@@ -37,5 +37,5 @@ private:
 	std::mutex* mutex_;
 	MessageQueuePtr spQueue_;
 };
-typedef std::shared_ptr<ReadThread> ReadThreadPtr;
-typedef std::weak_ptr<ReadThread> ReadThreadWeakPtr;
+using ReadThreadPtr = std::shared_ptr<ReadThread>;
+using ReadThreadWeakPtr = std::weak_ptr<ReadThread>;

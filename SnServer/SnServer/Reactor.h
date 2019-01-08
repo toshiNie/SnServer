@@ -20,9 +20,8 @@ public:
 private:
 	
 	HandlerMap mapHandler_;
-	NsEpollPtr spNsEpoll_;
-	std::mutex mutex_;
+	std::unique_ptr<NsEpoll> upNsEpoll_;
 };
-typedef std::shared_ptr<Reactor> ReactorPtr;
+using ReactorPtr = std::shared_ptr<Reactor>;
 
 #endif

@@ -3,7 +3,7 @@
 #include "AsyncLog.h"
 #include "Epoll.h"
 
-int NsEpoll::waitEvent(std::map<int, EventHandlerPtr> eventHandles, int timeout)
+int NsEpoll::waitEvent(std::map<int, EventHandlerPtr>& eventHandles, int timeout)
 {
 
 	std::vector<epoll_event> vecEvents(eventSize_);

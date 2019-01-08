@@ -19,7 +19,6 @@ private:
 	std::map<ThreadRAIIPtr, WorkerPtr> workerThreads_;
 	std::vector<ThreadRAII> vecThreads_;
 	MessageQueuePtr spQueue_;
-	std::mutex mutex_;
 	int pollNum_;
 	int workerNum_;
 };

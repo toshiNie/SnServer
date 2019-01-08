@@ -9,7 +9,7 @@ template<typename HandlerType>
 class AcceptHandler : public EventHandler
 {
 public:
-	AcceptHandler(int fd, ReactorPtr spReactor, std::mutex* mutex = nullptr) :sock_(fd), spReactor_(spReactor), mutex_(mutex)
+	AcceptHandler(int fd, ReactorPtr spReactor :sock_(fd), spReactor_(spReactor)
 	{
 		setHandlerType(ReadEvent);
 	}
@@ -25,7 +25,7 @@ public:
 		{
 			return;
 		}
-		socketutil::make_socket_non_blocking(sock);
+		socketutil::setNonblocking(sock);
 		typename HandlerType::ConnectSessionPtr spConnect(new typename HandlerType::ConnectSessionType(sock, spReactor_));
 		auto spThisThread = spReactor_->wpThisThead_.lock();
 		spThisThread->getTimeWheel().addSock(sock, spConnect->getRefIndex());
@@ -46,5 +46,4 @@ public:
 private:
 	int sock_;
 	ReactorPtr spReactor_;
-	std::mutex *mutex_;
 };

@@ -67,7 +67,6 @@ private:
 	std::shared_ptr<ReadThread> spThread_;
 };
 
-
 class HttpNormalHandler : public NomalEventHandler
 {
 public:

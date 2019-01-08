@@ -32,7 +32,6 @@ void NsLog::addLogFile(const std::string& strMoudle, const FILE* file)
 
 void NsLog::addLog(const std::string& strMoudle, const char* data, size_t size)
 {
-	//std::lock_guard<std::mutex> lg(mutex_);
 	auto iter = mapLogFile_.find(strMoudle);
 	if (iter != mapLogFile_.end())
 	{

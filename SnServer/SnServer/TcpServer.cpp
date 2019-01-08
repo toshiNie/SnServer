@@ -24,7 +24,7 @@ void TcpServer::run()
 	std::vector<MessageQueuePtr> vecQueue;
 	for (int i = 0; i < pollNum_; ++i)
 	{
-		auto spReadThread = std::make_shared<ReadThread>(listtenSocket_.GetSockFd(), &mutex_);
+		auto spReadThread = std::make_shared<ReadThread>(listtenSocket_.GetSockFd());
 		//pollThreads_.insert(std::make_pair(ThreadRAIIPtr(std::thread(std::bind(&ReadThread::run, spReadThread))), spReadThread));
 		vecThreads_.emplace_back(ThreadRAII(std::thread(std::bind(&ReadThread::run, spReadThread)), ThreadRAII::DtorAction::join));
 		vecQueue.push_back(spReadThread->getQueue());

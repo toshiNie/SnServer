@@ -3,16 +3,16 @@
 
 namespace socketutil
 {
-	int make_socket_non_blocking(int sfd)
+	int setNonblocking(int fd)
 	{
 		int flags;
-		flags = fcntl(sfd, F_GETFL, 0);
+		flags = fcntl(fd, F_GETFL, 0);
 		if (flags == -1)
 		{
 			return -1;
 		}
 		flags |= O_NONBLOCK;
-		int ret = fcntl(sfd, F_SETFL, flags);
+		int ret = fcntl(fd, F_SETFL, flags);
 		if (ret == -1)
 		{
 			return ret;
