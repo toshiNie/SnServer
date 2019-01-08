@@ -5,7 +5,7 @@
 #include"FileUtil.h"
 class LogFile: public noncopyable
 {
-	enum {BufferSize= 64 * 1024};
+	enum {BufferSize= 10 * 1024 * 1024};
 public:
 	LogFile(const std::string& strBaseName, const size_t rollSize = 1024 * 1024 * 100);
 

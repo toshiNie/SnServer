@@ -1,5 +1,6 @@
 #pragma once
 #include"stdafx.h"
+#include"Global.h"
 #define STATIC_CHECK(expr) {char unnamed[expr? 1 : 0];}
 template<typename T>
 class SafeQueue
@@ -16,10 +17,10 @@ public:
 	{
 		STATIC_CHECK(sizeof(U) <= sizeof(T));
 		std::unique_lock<std::mutex> lck(mutex_);
-		/*	while (isFullWithoutLock())
+		while (isFullWithoutLock())
 		{
-		condNotFull_.wait(lck);
-		}*/
+			condNotFull_.wait_for(lck, std::chrono::duration<int>(1));
+		}
 		queue_.push(std::forward<T>(x));
 		condNotEmpty_.notify_one();
 	}
@@ -28,7 +29,7 @@ public:
 		std::unique_lock<std::mutex> lck(mutex_);
 		while (isEmptyWithoutLock())
 		{
-			condNotEmpty_.wait(lck);
+			condNotEmpty_.wait_for(lck, std::chrono::duration<int>(1));
 		}
 		T temp(queue_.front());
 		queue_.pop();
@@ -49,10 +50,6 @@ public:
 	{
 		std::lock_guard<std::mutex> guard(mutex_);
 		return queue_.size();
-	}
-	std::queue<T>& getQueue()
-	{
-		return queue_;
 	}
 
 private:

@@ -2,7 +2,7 @@
 #ifndef NSLOG_H_
 #define NSLOG_H_
 #include"stdafx.h"
-#include"LogFile.h"
+class LogFile;
 class NsLog
 {
 public:
@@ -69,7 +69,7 @@ public:
 		return level_;
 	}
 private:
-	std::map<std::string, LogFilePtr> mapLogFile_;
+	std::map<std::string, std::shared_ptr<LogFile> > mapLogFile_;
 	LogLevel level_;
 	std::mutex mutex_;
 };

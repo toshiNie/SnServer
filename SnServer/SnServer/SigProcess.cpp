@@ -1,11 +1,13 @@
 #include"stdafx.h"
 #include"AsyncLog.h"
+#include"Global.h"
 #include"SigProcess.h"
 
 void processCtrl_C(int sig)
 {
 	printf("ctrl_C:%d\n",errno);
 	AsyncLog::getInstance().flush();
+	Global::cancleFlag = true;
 	printf("exit\n");
 	exit(0);
 	//kill(getpid(), 9);

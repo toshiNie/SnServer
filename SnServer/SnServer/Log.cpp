@@ -1,4 +1,5 @@
 #include"stdafx.h"
+#include"LogFile.h"
 #include"Log.h"
 
 

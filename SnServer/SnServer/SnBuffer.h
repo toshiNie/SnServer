@@ -100,8 +100,6 @@ private:
 	size_t bufferSize_;
 };
 
-
-
 class SnBuffer
 {
 public:
@@ -141,6 +139,10 @@ public:
 	void peek(size_t size)
 	{
 		writeIndex_ += size;
+		if (buffer_.size() - writeIndex_ == 0)
+		{
+			expand();
+		}
 	}
 
 	void consumHead(size_t size)

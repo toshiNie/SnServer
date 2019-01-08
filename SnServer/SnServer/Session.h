@@ -19,16 +19,15 @@ public:
 
 	void close();
 
-	SnBuffer readbuffer_;
-	SnBuffer writebuffer_;
+	SnBuffer readBuffer;
+	SnBuffer writeBuffer;
 
-	std::mutex mutex_;
+	std::mutex writeMutex;
 protected:
 	int sock_;
 	int index_;
 	ReactorPtr spReactor_;
 	
 };
-typedef std::shared_ptr<ConnectSession>  ConnectSessionPtr;
 
 #endif // !CONNECTSESSION_H_

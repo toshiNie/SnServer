@@ -32,14 +32,19 @@ public:
 	int contentLength_;
 	HttpRequest httpRequset_;
 };
-using HttpConnectSessionPtr = std::shared_ptr<HttpConnectSession>;
 
 class HttpHandler
 	: public EventHandler
 {
 	enum { READ_SIZE  = 1024 };
 public:
-	HttpHandler(HttpConnectSessionPtr spConnect, ReactorPtr spReactor);
+	using ConnectSessionType = HttpConnectSession;
+	using ConnectSessionPtr = std::shared_ptr<ConnectSessionType>;
+
+	//typedef  HttpConnectSession SessionType;
+	//typedef std::shared_ptr<SessionType> ConnectSessionPtr;
+public:
+	HttpHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor);
 
 	void readHandle() override;
 
@@ -49,7 +54,6 @@ public:
 	{
 		return spConnect_->getFd();
 	}
-
 private:
 	void onRead();
 
@@ -58,7 +62,7 @@ private:
 	bool onWrite(int len);
 
 private:
-	HttpConnectSessionPtr spConnect_;
+	ConnectSessionPtr spConnect_;
 	ReactorPtr spReactor_;
 	std::shared_ptr<ReadThread> spThread_;
 };
@@ -67,15 +71,14 @@ private:
 class HttpNormalHandler : public NomalEventHandler
 {
 public:
-	HttpNormalHandler(HttpConnectSessionPtr spConnect, ReactorPtr spReactor);
-
+	using  ConnectSessionType = HttpConnectSession;
+	using ConnectSessionPtr = std::shared_ptr<ConnectSessionType>;
+public:
+	HttpNormalHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor);
 private:
 	void onRead();
-
 	void onMessage();
-
 	bool onWrite(int len);
 private:
-	HttpConnectSessionPtr spHttpConnect_;
-
+	ConnectSessionPtr spHttpConnect_;
 };

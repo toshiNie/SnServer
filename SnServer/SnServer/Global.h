@@ -1,7 +1,8 @@
 #pragma once
 #include "stdafx.h"
+#include<atomic>
 class Global
 {
 public:
-	static std::mutex mutex;
+	static std::atomic_bool cancleFlag;
 };

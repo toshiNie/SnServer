@@ -6,7 +6,7 @@ class MessagePackage
 public:
 	int size;
 	std::vector<char> buffer;
-	ConnectSessionPtr spConnect;
+	std::shared_ptr<ConnectSession> spConnect;
 	virtual ~MessagePackage() {}
 };
 using MessagePackagePtr = std::shared_ptr<MessagePackage>;

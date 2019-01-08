@@ -1,9 +1,6 @@
 #include"stdafx.h"
 #include"TimeEvent.h"
 
-
-
-
 TimeEvent::TimeEvent(std::function<void()>&& func)
 	:timefd_(timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC | TFD_NONBLOCK)),
 	func_(func),

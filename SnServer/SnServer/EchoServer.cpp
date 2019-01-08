@@ -3,7 +3,7 @@
 #include "TcpServer.h"
 #include "TimeHandler.h"
 #include "ReadThread.h"
-#include "HttpServer.h"
+#include "NormalHandler.h"
 #include"AcceptHandler.h"
 
 void EchoReadHandler::readHandle()
@@ -124,7 +124,7 @@ void EchoServer::readThread(int threadIndex)
 {
 	LOG_INFO("readThread start");
 	auto spReactor = std::make_shared<Reactor>();
-	auto spAcceptHandler = std::make_shared<AcceptHandler>(listtenSocket_.GetSockFd(), spReactor, &mutex_);
+	auto spAcceptHandler = std::make_shared<AcceptHandler<NomalEventHandler> >(listtenSocket_.GetSockFd(), spReactor, &mutex_);
 	spReactor->addHandler(spAcceptHandler);
 	while (true)
 	{

@@ -3,7 +3,7 @@
 #include "SnBuffer.h"
 #include "TcpServer.h"
 
-TcpServer::TcpServer() :spQueue_(std::make_shared<MessageQueue>()), pollNum_(4), workerNum_(4)
+TcpServer::TcpServer() :spQueue_(std::make_shared<MessageQueue>()), pollNum_(1), workerNum_(1)
 {
 }
 TcpServer::~TcpServer()
@@ -14,7 +14,7 @@ void TcpServer::run()
 	listenAddress_.strIp_ = "0.0.0.0";
 	listenAddress_.port = 4321;
 	listtenSocket_.BindAddress(listenAddress_);
-	if (!listtenSocket_.Listen(1024))
+	if (!listtenSocket_.Listen(65535))
 	{
 		LOG_ERROR("listen failed");
 		return;

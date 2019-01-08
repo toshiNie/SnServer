@@ -40,7 +40,7 @@ void LogFile::appendUnlock(const char* data, size_t size)
 
 	if (flushSize_ > BufferSize)
 	{
-		//std::cout << "flush" << std::endl;
+		std::cout << "flush:" <<flushSize_ <<std::endl;
 		spWriteableFile_->flush();
 		flushSize_ = 0;
 	}

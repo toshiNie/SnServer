@@ -37,7 +37,7 @@ void AsyncLog::addLogFile(const std::string &strMoudle, const FILE* flie)
 
 void AsyncLog::run()
 {
-	spThread_ = std::make_unique<ThreadRAII>(ThreadRAII(std::thread(
+	spThread_ = std::unique_ptr<ThreadRAII>(new ThreadRAII(std::thread(
 		[&]() {
 		while (!isCancel_)
 		{
@@ -54,5 +54,6 @@ void AsyncLog::flush()
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
+	isCancel_ = true;
 	log_.flush();
 }

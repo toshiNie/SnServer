@@ -23,8 +23,9 @@ public:
 public:
 	HttpRequest()
 		:method_(Method::UNKNOWMEN),
-		version_(Version::HTTP11),
-		contentLength_(-1)
+		version_(Version::UNKNOWMEN),
+		contentLength_(-1),
+		content_(0)
 	{
 
 	}
@@ -74,9 +75,13 @@ public:
 		{
 			version_ = Version::HTTP10;
 		}
-		else
+		else if(strVersion == "HTTP/1.1")
 		{
 			version_ = Version::HTTP11;
+		}
+		else
+		{
+			version_ = Version::UNKNOWMEN;
 		}
 	}
 	void setUrl(const std::string& strUrl)
@@ -114,7 +119,7 @@ public:
 	void reset()
 	{
 		method_ = Method::UNKNOWMEN;
-		version_ = Version::HTTP11;
+		version_ = Version::UNKNOWMEN;
 		url_.clear();
 		header_.clear();
 		content_.clear();
@@ -153,11 +158,8 @@ private:
 	Method method_;
 	Version version_;
 	std::string url_;
-
 	std::vector<std::string> paths_;
 	std::map<std::string, std::string> params_;
-
-
 	std::map<std::string, std::string> header_;
 	int contentLength_;
 	std::vector<char> content_;

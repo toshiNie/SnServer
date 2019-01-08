@@ -23,7 +23,7 @@ public:
 
 	TimeWheel& getTimeWheel();
 
-	std::map<int, ConnectSessionPtr>& getManager();
+	std::map<int, std::shared_ptr<ConnectSession> > & getManager();
 
 	MessageQueuePtr getQueue();
 
@@ -33,7 +33,7 @@ private:
 
 	int listenFd_;
 	TimeWheel timeWheel_;
-	std::map<int, ConnectSessionPtr> connectionManager_;
+	std::map<int, std::shared_ptr<ConnectSession>> connectionManager_;
 	std::mutex* mutex_;
 	MessageQueuePtr spQueue_;
 };

@@ -2,6 +2,7 @@
 #include"stdafx.h"
 #include<atomic>
 #include"Time.h"
+//muti producter single consumer(for log)
 template<typename T>
 class DoubleBufferedQueue
 {
@@ -10,7 +11,7 @@ public:
 	void push(U&& value)
 	{
 		std::lock_guard<std::mutex> lg(mutex_);
-		queues_[1 - index_].push(value);
+		queues_[1 - index_].push(std::forward<T>(value));
 	}
 
 	T pop()
@@ -18,12 +19,12 @@ public:
 		while (isEmpty())
 		{
 			mutex_.lock();
-			index_ = (++index_) & 0x1;
+			index_ = (~index_) & 0x1;
 			if (isEmpty())
 			{
-				index_ = (++index_) & 0x1;
+				index_ = (~index_) & 0x1;
 				mutex_.unlock();
-				std::this_thread::sleep_for(std::chrono::seconds(1));
+				std::this_thread::sleep_for(std::chrono::seconds(1)); //waiting producter 
 			}
 			else
 			{
@@ -42,15 +43,13 @@ public:
 	}
 	bool isEmptySafe()
 	{
-		std::lock_guard<std::mutex> lg(mutex_);
 		std::cout << queues_[0].size() << ":" << queues_[1].size() << std::endl;
 		return queues_[0].size() == 0 && queues_[1].size() == 0;
 	}
 private:
-	std::queue<T> queues_[2]; //0 for read  1 for write
+	std::queue<T> queues_[2]; //index_ for read , the other for write
 	size_t index_;
 	std::mutex mutex_;
-
 };
 
 

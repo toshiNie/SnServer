@@ -14,9 +14,9 @@ void TimeWheel::setFunc(std::function<void(int)> && func)
 
 void TimeWheel::onTimer()
 {
-	for (auto &spConnect : bucket_[index_])
+	for (auto &sock : bucket_[index_])
 	{
-		func_(spConnect);
+		func_(sock);
 	}
 	bucket_[index_].clear();
 	index_ = ++index_ % bucket_.size();
@@ -24,7 +24,7 @@ void TimeWheel::onTimer()
 
 TimeEventPtr TimeWheel::getEvent(int interval)
 {
-	TimeEventPtr spTimerEvent(new TimeEvent(std::bind(&TimeWheel::onTimer, this)));
+	auto spTimerEvent = std::make_shared<TimeEvent>(std::bind(&TimeWheel::onTimer, this));
 	spTimerEvent->setTime(interval);
 	return spTimerEvent;
 }

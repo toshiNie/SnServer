@@ -37,11 +37,10 @@ public:
 	{
 		file_ = ::fopen(strFileName_.c_str(), "ae");
 
-		if (file_ != nullptr)
+		if (file_)
 		{
 			::setbuffer(file_, buffer_, sizeof(buffer_));
 		}
-
 		return file_ != nullptr;
 	}
 	bool append(const char* data, size_t size) override
@@ -56,6 +55,7 @@ public:
 	{
 		if (::fflush(file_) != 0)
 			return false;
+		printf("flush\n");
 		return true;
 	}
 	bool isExist() override
@@ -75,6 +75,6 @@ public:
 	}
 private:
 	FILE* file_;
-	char buffer_[64 * 1024];
+	char buffer_[1024 * 1024];
 	std::string strFileName_;
 };

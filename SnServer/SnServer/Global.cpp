@@ -1,4 +1,4 @@
 #include"stdafx.h"
 #include"Global.h"
 
-std::mutex Global::mutex;
+std::atomic_bool Global::cancleFlag(false);
