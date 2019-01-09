@@ -6,36 +6,36 @@
 #include "NormalHandler.h"
 #include"AcceptHandler.h"
 
-void EchoReadHandler::readHandle()
+void EchoReadHandler::readHandler()
 {
 	auto spThisThread = spReactor_->wpThisThead_.lock();
 	auto spConnect = spThisThread->getManager()[sock_];
 	spThisThread->getTimeWheel().resetSock(sock_,spConnect->getRefIndex());
-	LOG_INFO("echo read handle");
+	LOG_INFO() << "echo read handle";
 	int r = 0;
 	int len = 0;
 	int ret = ::read(sock_, (void*)&len, sizeof(len));
 	if (ret == 0)
 	{
-		LOG_INFO("client disconnect:" + std::to_string(sock_));
+		LOG_INFO() << "client disconnect:" << sock_;
 		spThisThread->removeClient(sock_);
 		return;
 	}
 	if (ret < 0)
 	{
-		LOG_INFO("error:" + std::to_string(errno));
+		LOG_INFO() << "error:" << errno;
 		spThisThread->removeClient(sock_);;
 		return;
 	}
-	LOG_INFO("read len:" + std::to_string(len));
+	LOG_INFO() << "read len:" << len;
 	std::vector<char> buffer(len);
 	while (r < len)
 	{
 		r = ::read(sock_, buffer.data() + r, len);
-		LOG_INFO("read size:" + std::to_string(r));
+		LOG_INFO() << "read size:" << r;
 		if (r <= 0)
 		{
-			LOG_INFO("error:" + std::to_string(errno));
+			LOG_INFO() << "error:" << errno;
 			if (errno == EAGAIN)
 			{
 				return;
@@ -50,15 +50,14 @@ void EchoReadHandler::readHandle()
 }
 
 
-void EchoWriteHandler::writeHandle()
+void EchoWriteHandler::writeHandler()
 {
-	LOG_INFO(__FUNCTION__);
 	int w = 0;
 	auto spThisThread = spReactor_->wpThisThead_.lock();
 	while (writedBuffer_.size() > 0)
 	{
 		w = ::write(sock_, (void*)writedBuffer_.getReadbuffer(), writedBuffer_.size());
-		LOG_INFO("write size:" + std::to_string(w));
+		LOG_INFO() << "write size:" <<  w;
 		if (w < 0)
 		{
 			if (errno == EAGAIN)
@@ -67,7 +66,7 @@ void EchoWriteHandler::writeHandle()
 			}
 			else
 			{
-				LOG_INFO("write error:" + std::to_string(errno));
+				LOG_INFO() << "write error:"  << errno;
 				spThisThread->removeClient(sock_);
 			}
 		}
@@ -84,11 +83,11 @@ void EchoServer::run()
 	listtenSocket_.BindAddress(listenAddress_);
 	if (!listtenSocket_.Listen(1024))
 	{
-		LOG_INFO("listen failed");
+		LOG_INFO() << "listen failed";
 		return;
 	}
 	socketutil::setNonblocking(listtenSocket_.GetSockFd());
-	LOG_INFO("listen OK");
+	LOG_INFO() << "listen OK";
 
 	for (int i = 0; i < 3; ++i)
 	{
@@ -104,12 +103,12 @@ void EchoServer::run()
 
 void EchoServer::acceptThread()
 {
-	LOG_INFO("acceptThread start");
+	LOG_INFO() << "acceptThread start";
 	int i = 0;
 	while (true)
 	{
 		int sock = listtenSocket_.Accept();
-		LOG_INFO("new client connect: " + std::to_string(sock));
+		LOG_INFO() << "new client connect: " <<  std::to_string(sock);
 		std::lock_guard<std::mutex> lg(mutex_);
 		i = i % subReactors_.size();
 		ReactorPtr spReactor = subReactors_[i];
@@ -122,7 +121,7 @@ void EchoServer::acceptThread()
 
 void EchoServer::readThread(int threadIndex)
 {
-	LOG_INFO("readThread start");
+	LOG_INFO() << "readThread start";
 	auto spReactor = std::make_shared<Reactor>();
 	auto spAcceptHandler = std::make_shared<AcceptHandler<NomalEventHandler> >(listtenSocket_.GetSockFd(), spReactor);
 	spReactor->addHandler(spAcceptHandler);

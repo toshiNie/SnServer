@@ -54,25 +54,31 @@ void ReadThread::loop()
 }
 void ReadThread::run()
 {
-	LOG_INFO("readThread start");
+	LOG_INFO() << "readThread start";
 	init();
 	loop();
 }
 void ReadThread::removeClient(int sock)
 {
 	upImpl_->spReactor_->remove(sock);
-	auto spConnect = connectionManager_[sock];
-	spConnect->close();
-	timeWheel_.remove(spConnect->getFd(),spConnect->getRefIndex());
-	connectionManager_.erase(sock);
+	auto iter = connectionManager_.find(sock);
+	if (iter != connectionManager_.end())
+	{
+		iter->second->close();
+		timeWheel_.remove(iter->second->getFd(), iter->second->getRefIndex());
+		connectionManager_.erase(sock);
+	}
 }
 void ReadThread::onTimerRemoveClient(int sock)
 {
-	LOG_INFO("kick ass" + std::to_string(sock));
+	LOG_INFO() << "kick ass" << sock;
 	upImpl_->spReactor_->remove(sock);
-	auto spConnect = connectionManager_[sock];
-	spConnect->close();
-	connectionManager_.erase(spConnect->getFd());
+	auto iter = connectionManager_.find(sock);
+	if (iter != connectionManager_.end())
+	{
+		iter->second->close();
+		connectionManager_.erase(sock);
+	}
 }
 
 TimeWheel& ReadThread::getTimeWheel()

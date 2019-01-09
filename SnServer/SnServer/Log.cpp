@@ -3,14 +3,14 @@
 #include"Log.h"
 
 
-NsLog& NsLog::instance()
+Log& Log::instance()
 {
-	static NsLog nsLog;
+	static Log nsLog;
 	return nsLog;
 }
-NsLog::NsLog() :level_(LogLevel::INFO) {}
+Log::Log() :level_(LogLevel::INFO) {}
 
-void NsLog::addLogFile(const std::string& strMoudle, const std::string& strBaseFileName, int size)
+void Log::addLogFile(const std::string& strMoudle, const std::string& strBaseFileName, int size)
 {
 	if (mapLogFile_.find(strMoudle) == mapLogFile_.end())
 	{
@@ -20,7 +20,7 @@ void NsLog::addLogFile(const std::string& strMoudle, const std::string& strBaseF
 	}
 }
 
-void NsLog::addLogFile(const std::string& strMoudle, const FILE* file)
+void Log::addLogFile(const std::string& strMoudle, const FILE* file)
 {
 	if (mapLogFile_.find(strMoudle) == mapLogFile_.end())
 	{
@@ -30,7 +30,7 @@ void NsLog::addLogFile(const std::string& strMoudle, const FILE* file)
 	}
 }
 
-void NsLog::addLog(const std::string& strMoudle, const char* data, size_t size)
+void Log::addLog(const std::string& strMoudle, const char* data, size_t size)
 {
 	auto iter = mapLogFile_.find(strMoudle);
 	if (iter != mapLogFile_.end())
@@ -41,7 +41,7 @@ void NsLog::addLog(const std::string& strMoudle, const char* data, size_t size)
 	}
 }
 
-void NsLog::addLog(NsLog::LogPackagePtr spLogPackage)
+void Log::addLog(Log::LogPackagePtr spLogPackage)
 {
 	if (spLogPackage->logLevel < level_)
 	{
@@ -54,7 +54,7 @@ void NsLog::addLog(NsLog::LogPackagePtr spLogPackage)
 		iter->second->append(logMessage.c_str(), logMessage.size());
 	}
 }
-void NsLog::flush()
+void Log::flush()
 {
 	for (auto& iter : mapLogFile_)
 	{

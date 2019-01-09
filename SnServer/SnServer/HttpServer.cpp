@@ -16,31 +16,29 @@ HttpHandler::HttpHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor)
 	spReactor_(spReactor),
 	spThread_(spReactor_->wpThisThead_.lock())
 {
-	LOG_DEBUG("HttpHandler" + std::to_string(spConnect->getFd()));
+	LOG_DEBUG() << "HttpHandler" << spConnect->getFd();
 }
-void HttpHandler::readHandle()
+void HttpHandler::readHandler()
 {
-	LOG_DEBUG("Readhanlde");
+	LOG_DEBUG() << "Readhanlde";
 	spThread_->getTimeWheel().resetSock(spConnect_->getFd(), spConnect_->getRefIndex());
-	//std::vector<char> buffer(READ_SIZE);
 	char buffer[READ_SIZE] = {0};
-	//int r = ::read(spConnect_->getFd(), (void*)buffer.data(), READ_SIZE);
 	int remainLen = spConnect_->readBuffer.getRemainSize();
 	int r = socketutil::readv2(spConnect_->getFd(), spConnect_->readBuffer.getRemainbuffer(), remainLen, buffer, sizeof(buffer));
-	LOG_INFO("remain size" + std::to_string(remainLen));
-	LOG_INFO("read size" + std::to_string(r));
+	LOG_INFO() << "remain size" << remainLen;
+	LOG_INFO() << "read size" << r;
 	if (r < 0)
 	{
 		if (errno == EAGAIN)
 		{
 			return;
 		}
-		LOG_ERROR("read error: " + std::to_string(errno));
+		LOG_ERROR() << "read error: " << errno;
 		spThread_->removeClient(spConnect_->getFd());
 	}
 	else if (r == 0)
 	{
-		LOG_INFO("client disconnect: " + std::to_string(spConnect_->getFd()));
+		LOG_INFO() << "client disconnect: " << spConnect_->getFd();
 		spThread_->removeClient(spConnect_->getFd());
 	}
 	else
@@ -58,22 +56,20 @@ void HttpHandler::readHandle()
 	}
 	return;
 }
-void HttpHandler::writeHandle()
+void HttpHandler::writeHandler()
 {
-	LOG_DEBUG("TRYLOCK");
 	std::lock_guard<std::mutex> lg(spConnect_->writeMutex);
 	spThread_->getTimeWheel().resetSock(spConnect_->getFd(),spConnect_->getRefIndex());
-	LOG_DEBUG("GETLOCK");
 	int w = ::write(spConnect_->getFd(), spConnect_->writeBuffer.getReadbuffer(), spConnect_->writeBuffer.size());
-	LOG_INFO("writebuffer size: " + std::to_string(spConnect_->writeBuffer.size()));
-	LOG_INFO("writen size: " + std::to_string(w));
+	LOG_INFO() << "writebuffer size: "  << spConnect_->writeBuffer.size();
+	LOG_INFO() <<"writen size: " << w;
 	if (w < 0)
 	{
 		if (errno == EAGAIN)
 		{
 			return;
 		}
-		LOG_ERROR("write error: " + std::to_string(errno));
+		LOG_ERROR() << "write error: " << errno;
 	}
 	else
 	{
@@ -82,7 +78,11 @@ void HttpHandler::writeHandle()
 			spReactor_->mod(spConnect_->getFd(), ReadEvent);
 		}
 	}
-	LOG_DEBUG("REALISELOCK");
+}
+
+void HttpHandler::errorHandler()
+{
+	spThread_->removeClient(spConnect_->getFd());
 }
 void HttpHandler::onRead()
 {

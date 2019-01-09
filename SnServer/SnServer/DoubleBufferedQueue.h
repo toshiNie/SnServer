@@ -11,7 +11,7 @@ public:
 	void push(U&& value)
 	{
 		std::lock_guard<std::mutex> lg(mutex_);
-		queues_[1 - index_].push(std::forward<T>(value));
+		queues_[1 - index_].emplace(std::forward<T>(value));
 	}
 
 	T pop()

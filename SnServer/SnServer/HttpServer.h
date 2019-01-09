@@ -46,9 +46,11 @@ public:
 public:
 	HttpHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor);
 
-	void readHandle() override;
+	void readHandler() override;
 
-	void writeHandle() override;
+	void writeHandler() override;
+
+	void errorHandler() override;
 
 	int getFd() override
 	{
@@ -67,6 +69,8 @@ private:
 	std::shared_ptr<ReadThread> spThread_;
 };
 
+
+
 class HttpNormalHandler : public NomalEventHandler
 {
 public:
@@ -75,9 +79,9 @@ public:
 public:
 	HttpNormalHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor);
 private:
-	void onRead();
-	void onMessage();
-	bool onWrite(int len);
+	void onRead() override; 
+	void onMessage() override;
+	bool onWrite(int len) override;
 private:
 	ConnectSessionPtr spHttpConnect_;
 };

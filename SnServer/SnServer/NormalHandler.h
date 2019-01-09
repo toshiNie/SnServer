@@ -15,9 +15,9 @@ public:
 
 public:
 	NomalEventHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor);
-	void readHandle() override;
-	void writeHandle() override;
-	void errorHandle() override;
+	void readHandler() override;
+	void writeHandler() override;
+	void errorHandler() override;
 	int getFd() override;
 protected:
 	virtual void onRead();  //判断是不是完整包

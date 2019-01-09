@@ -25,7 +25,7 @@ void MessageProcessThread::run()
 		//spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent);
 
 		HttpMessagePackagePtr spHttpMessage = std::dynamic_pointer_cast<HttpMessagePackage>(spMessage);
-		LOG_INFO(spHttpMessage->httpRequset.getContent().data());
+		LOG_INFO() << spHttpMessage->httpRequset.getContent().data();
 		HttpResponse resp;
 		resp.setCode(HttpResponse::C200);
 		std::string ret = "hello world";

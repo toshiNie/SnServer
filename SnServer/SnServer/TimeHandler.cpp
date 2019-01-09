@@ -10,7 +10,7 @@ TimeHandler::TimeHandler(TimeEventPtr spTimeEvent, ReactorPtr spReactor) :
 	setHandlerType(ReadEvent);
 }
 
-void TimeHandler::readHandle() 
+void TimeHandler::readHandler() 
 {
 	uint64_t time;
 	int r = read(spTimeEvent_->getFd(), (void*)&time, sizeof(time));

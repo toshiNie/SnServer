@@ -14,8 +14,8 @@ int main()
 	registeSig();
 	//FILE * file = fopen("/dev/null","w");	
 	//FILE * file = fopen("/dev/stdout","we");
-	//thread.addLogFile("info", file);
-	thread.addLogFile("info", "ns.log");
+	//thread.addLogFile("default", file);
+	thread.addLogFile("default", "ns.log");
 	thread.run();
 	TcpServer server;
 	server.run();

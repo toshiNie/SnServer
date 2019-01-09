@@ -12,8 +12,8 @@ add_executable(SnServer
 	SocketUtil.cpp
 	SigProcess.cpp
 	EchoServer.cpp
-	Log.cpp
-  	AsyncLog.cpp
+  AsyncLog.cpp
+  Inifile.cpp
 	LogFile.cpp
 	TimeHandler.cpp
 	Global.cpp

@@ -16,11 +16,11 @@ public:
 	~AcceptHandler()
 	{
 	}
-	virtual void readHandle()
+	virtual void readHandler() override
 	{
-		LOG_INFO("accept handle");
+		LOG_INFO() << "accept handle";
 		int sock = ::accept(sock_, nullptr, nullptr);
-		LOG_INFO("accept sock: " + std::to_string(sock));
+		LOG_INFO() << "accept sock: " << sock;
 		if (sock < 0)
 		{
 			return;
@@ -33,15 +33,16 @@ public:
 		auto spReadHandler = std::make_shared<HandlerType>(spConnect, spReactor_);
 		spReadHandler->setHandlerType(ReadEvent);
 		spReactor_->addHandler(spReadHandler);
-		LOG_INFO("AddReadHandler: " + std::to_string(sock));
+		LOG_INFO() << "AddReadHandler: " << sock;
 	}
-	virtual void errorHandle()
+	virtual void errorHandler() override
 	{
-		LOG_ERROR("error");
+		LOG_ERROR() << "error";
 		spReactor_->remove(sock_);
 		::close(sock_);
 	}
-	virtual int getFd() { return sock_; }
+	virtual int getFd() override
+	{ return sock_; }
 private:
 	int sock_;
 	ReactorPtr spReactor_;

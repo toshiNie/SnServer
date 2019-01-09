@@ -3,7 +3,7 @@
 #include "SnBuffer.h"
 #include "TcpServer.h"
 
-TcpServer::TcpServer() :spQueue_(std::make_shared<MessageQueue>()), pollNum_(1), workerNum_(1)
+TcpServer::TcpServer() :spQueue_(std::make_shared<MessageQueue>()), pollNum_(3), workerNum_(1)
 {
 }
 TcpServer::~TcpServer()
@@ -16,11 +16,11 @@ void TcpServer::run()
 	listtenSocket_.BindAddress(listenAddress_);
 	if (!listtenSocket_.Listen(65535))
 	{
-		LOG_ERROR("listen failed");
+		LOG_ERROR() << " listen failed";
 		return;
 	}
 	socketutil::setNonblocking(listtenSocket_.GetSockFd());
-	LOG_INFO("listen OK");
+	LOG_INFO() << "listen OK";
 	std::vector<MessageQueuePtr> vecQueue;
 	for (int i = 0; i < pollNum_; ++i)
 	{

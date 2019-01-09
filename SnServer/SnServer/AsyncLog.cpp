@@ -1,7 +1,9 @@
 #include"stdafx.h"
+#include"LogFile.h"
 #include"AsyncLog.h"
 
-AsyncLog::AsyncLog() :log_(NsLog::instance()),isCancel_(false)
+
+AsyncLog::AsyncLog():isCancel_(false),level_(LogLevel::INFO),rollSize_(1024*1024*100)
 {
 
 }
@@ -17,43 +19,52 @@ AsyncLog::~AsyncLog()
 
 }
 
-void AsyncLog::put(NsLog::LogPackagePtr  upLogPackage)
+void AsyncLog::put(const char* moudle, std::string&& strlog)
 {
 	if (!isCancel_)
 	{
-		logQueue_.push(std::move(upLogPackage));
+		auto iter = logThreads_.find(moudle);
+		if(iter != logThreads_.end())
+		{ 
+			iter->second->queue.push(strlog);
+		}
 	}
 }
 
 void AsyncLog::addLogFile(const std::string &strMoudle, const std::string& strFileName)
 {
-	log_.addLogFile(strMoudle, strFileName);
+	logThreads_[strMoudle] = std::make_shared<LogThread>(strFileName, rollSize_);
 }
 
-void AsyncLog::addLogFile(const std::string &strMoudle, const FILE* flie)
+void AsyncLog::addLogFile(const std::string &strMoudle, FILE* flie)
 {
-	log_.addLogFile(strMoudle, flie);
+	logThreads_[strMoudle] = std::make_shared<LogThread>(flie);
 }
 
 void AsyncLog::run()
 {
-	spThread_ = std::unique_ptr<ThreadRAII>(new ThreadRAII(std::thread(
-		[&]() {
-		while (!isCancel_)
-		{
-			auto spMessage = std::move(logQueue_.pop());
-			log_.addLog(spMessage);
-		}
+	for (auto &item : logThreads_)
+	{
+		threads_.emplace_back(ThreadRAII(std::thread(std::bind(&LogThread::run, item.second)), ThreadRAII::DtorAction::join));
 	}
-	), ThreadRAII::DtorAction::join));
 }
 
 void AsyncLog::flush()
 {
-	while (!logQueue_.isEmptySafe())
-	{
+	while (true) {
+		bool ret = true;
+		for (auto & item : logThreads_)
+		{
+			ret = ret && item.second->queue.isEmptySafe();
+		}
+		if (ret)
+		{
+			break;
+		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
-	isCancel_ = true;
-	log_.flush();
+	for (auto & item : logThreads_)
+	{
+		item.second->spLogFile->flush();
+	}
 }

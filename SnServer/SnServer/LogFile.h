@@ -24,7 +24,6 @@ private:
 	
 private:
 	std::shared_ptr<WritableFile>  spWriteableFile_;
-	std::mutex mutex_;
 	std::string strBaseName_;
 	std::vector<std::string> fileNames_;
 	size_t size_;

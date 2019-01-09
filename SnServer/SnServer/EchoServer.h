@@ -21,10 +21,10 @@ public:
 	~EchoWriteHandler()
 	{
 	}
-	virtual void writeHandle();
-	virtual void errorHandle()
+	virtual void writeHandler();
+	virtual void errorHandler()
 	{
-		LOG_ERROR("error");
+		LOG_ERROR() << "error";
 		spReactor_->remove(sock_);
 		::close(sock_);
 	};
@@ -47,10 +47,10 @@ public:
 	~EchoReadHandler()
 	{
 	}
-	virtual void readHandle();
-	virtual void errorHandle()
+	virtual void readHandler();
+	virtual void errorHandler()
 	{
-		LOG_ERROR("error");
+		LOG_ERROR() << "error";
 		spReactor_->remove(sock_);
 		::close(sock_);
 	};

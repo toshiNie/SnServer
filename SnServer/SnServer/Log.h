@@ -3,7 +3,7 @@
 #define NSLOG_H_
 #include"stdafx.h"
 class LogFile;
-class NsLog
+class Log
 {
 public:
 	enum class LogLevel
@@ -39,7 +39,6 @@ public:
 			default:
 				return "[UNKNOWEN]";
 			}
-
 		}
 		std::string toString()
 		{
@@ -53,8 +52,8 @@ public:
 	};
 	typedef std::shared_ptr<LogPackage> LogPackagePtr;
 public:
-	NsLog();
-	static NsLog& instance();
+	Log();
+	static Log& instance();
 	void addLogFile(const std::string& strMoudle, const std::string& strBaseFileName , int size = 100*1024*1024);
 	void addLogFile(const std::string& strMoudle, const FILE* file);
 	void addLog(const std::string& strMoudle, const char* data, size_t size);

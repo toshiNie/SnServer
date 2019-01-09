@@ -8,13 +8,12 @@ NomalEventHandler::NomalEventHandler(ConnectSessionPtr spConnect, ReactorPtr spR
 	spReactor_(spReactor), spConnect_(spConnect), spThread_(spReactor->wpThisThead_.lock())
 {
 }
-void NomalEventHandler::readHandle()
+void NomalEventHandler::readHandler()
 {
-	LOG_DEBUG("Readhanlde");
+	LOG_DEBUG() <<"Readhanlde";
 	spThread_->getTimeWheel().resetSock(spConnect_->getFd(), spConnect_->getRefIndex());
 	int remainSize = spConnect_->readBuffer.getRemainSize();
-	LOG_DEBUG("remain size: " + std::to_string(remainSize));
-	//int r = ::read(spConnect_->getFd(), (void*)buffer.data(), READ_SIZE);
+	LOG_DEBUG() << "remain size: " << remainSize;
 	int r = ::read(spConnect_->getFd(), spConnect_->readBuffer.getRemainbuffer(), remainSize);
 	if (r < 0)
 	{
@@ -24,17 +23,17 @@ void NomalEventHandler::readHandle()
 			//spReactor_->mod(spConnect_->getFd(), ReadEvent);
 			return;
 		}
-		LOG_ERROR("read error: " + std::to_string(errno));
+		LOG_ERROR() << "read error: " << errno;
 		spThread_->removeClient(spConnect_->getFd());
 	}
 	else if (r == 0)
 	{
-		LOG_INFO("client disconnect: " + std::to_string(spConnect_->getFd()));
+		LOG_INFO() << "client disconnect: " << spConnect_->getFd();
 		spThread_->removeClient(spConnect_->getFd());
 	}
 	else
 	{
-		LOG_DEBUG("read  size: " + std::to_string(r));
+		LOG_DEBUG() << "read  size: " << r;
 		spConnect_->readBuffer.peek(r);
 		onRead();
 		//spReactor_->mod(spConnect_->getFd(), ReadEvent);
@@ -42,22 +41,20 @@ void NomalEventHandler::readHandle()
 	return;
 }
 
-void NomalEventHandler::writeHandle()
+void NomalEventHandler::writeHandler()
 {
-	LOG_DEBUG("TRYLOCK");
 	std::lock_guard<std::mutex> lg(spConnect_->writeMutex);
 	spThread_->getTimeWheel().resetSock(spConnect_->getFd(), spConnect_->getRefIndex());
-	LOG_DEBUG("GETLOCK");
 	int w = ::write(spConnect_->getFd(), spConnect_->writeBuffer.getReadbuffer(), spConnect_->writeBuffer.size());
-	LOG_INFO("writebuffer size: " + std::to_string(spConnect_->writeBuffer.size()));
-	LOG_INFO("writen size: " + std::to_string(w));
+	LOG_INFO() << "writebuffer size: " << spConnect_->writeBuffer.size();
+	LOG_INFO() << "writen size: " << w;
 	if (w < 0)
 	{
 		if (errno == EAGAIN)
 		{
 			return;
 		}
-		LOG_ERROR("write error: " + std::to_string(errno));
+		LOG_ERROR() << "write error: " << errno;
 		spThread_->removeClient(spConnect_->getFd());
 	}
 	else
@@ -67,11 +64,10 @@ void NomalEventHandler::writeHandle()
 			spReactor_->mod(spConnect_->getFd(), ReadEvent);
 		}
 	}
-	LOG_DEBUG("REALISELOCK");
 
 }
 
-void NomalEventHandler::errorHandle()
+void NomalEventHandler::errorHandler()
 {
 	spThread_->removeClient(spConnect_->getFd());
 }

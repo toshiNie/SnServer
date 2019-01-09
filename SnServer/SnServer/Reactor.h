@@ -5,6 +5,7 @@
 
 #include"EventHandler.h"
 #include"Epoll.h"
+
 class ReadThread;
 class Reactor
 {
@@ -20,7 +21,7 @@ public:
 private:
 	
 	HandlerMap mapHandler_;
-	std::unique_ptr<NsEpoll> upNsEpoll_;
+	std::unique_ptr<Epoll> upEpoll_;
 };
 using ReactorPtr = std::shared_ptr<Reactor>;
 

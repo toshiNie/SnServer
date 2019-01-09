@@ -7,7 +7,7 @@ class TimeHandler
 {
 public:
 	TimeHandler(TimeEventPtr spTimeEvent, ReactorPtr spReactor);
-	void readHandle() override;
+	void readHandler() override;
 	int getFd() override;
 private:
 	ReactorPtr spReactor_;

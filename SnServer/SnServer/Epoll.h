@@ -1,14 +1,14 @@
 #pragma once
 #ifndef NSEPOLL_H_
 #define NSEPOLL_H_
-class NsEpoll
+class Epoll
 {
 public:
-	NsEpoll():eventSize_(0)
+	Epoll():eventSize_(0)
 	{
 		epollFd_ = epoll_create1(0);
 	}
-	~NsEpoll()
+	~Epoll()
 	{
 		::close(epollFd_);
 	}

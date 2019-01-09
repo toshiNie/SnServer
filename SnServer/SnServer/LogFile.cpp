@@ -34,6 +34,11 @@ void LogFile::append(const char* data, size_t size)
 }
 void LogFile::appendUnlock(const char* data, size_t size)
 {
+	if(!spWriteableFile_)
+	{
+		std::cout << "null" << std::endl;
+		return;
+	}
 	spWriteableFile_->append(data, size);
 	size_ += size;
 	flushSize_ += size;
