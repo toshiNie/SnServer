@@ -1,5 +1,6 @@
 #pragma once
 #include"stdafx.h"
+#include"SocketUtil.h"
 struct Address
 {
 	const char* strIp_;
@@ -46,6 +47,15 @@ public:
 	{
 		int fd = ::accept(fd_, nullptr, nullptr);
 		return fd;
+	}
+	void setNonblock()
+	{
+		socketutil::setNonblocking(fd_);
+	}
+	bool connect(Address& address)
+	{
+		socklen_t len = address.getAddrSize();
+		return ::connect(fd_, address.ToIpv4Addr(), len) >= 0;
 	}
 	~Socket()
 	{

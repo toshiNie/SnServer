@@ -3,7 +3,7 @@
 #include"Session.h"
 #include"AcceptHandler.h"
 #include"Global.h"
-#include"HttpServer.h"
+#include"HttpHandler.h"
 #include"TimeHandler.h"
 #include"Reactor.h"
 #include"ReadThread.h"
@@ -36,7 +36,7 @@ ReadThread::~ReadThread() = default;
 
 void ReadThread::init()
 {
-	upImpl_->spReactor_->wpThisThead_ = shared_from_this();
+	upImpl_->spReactor_->wpThreadLocalManager = shared_from_this();
 	timeWheel_.setFunc(std::bind(&ReadThread::onTimerRemoveClient, this, std::placeholders::_1));
 	TimeEventPtr spTimeEvent = timeWheel_.getEvent(5000);
 	EventHandlerPtr spTimeEventHandler(new TimeHandler(spTimeEvent, upImpl_->spReactor_));
@@ -79,6 +79,34 @@ void ReadThread::onTimerRemoveClient(int sock)
 		iter->second->close();
 		connectionManager_.erase(sock);
 	}
+}
+
+
+void ReadThread::addConnection(std::shared_ptr<ConnectSession> spConnect)
+{
+	connectionManager_[spConnect->getFd()] = spConnect;
+	timeWheel_.addSock(spConnect->getFd(), spConnect->getRefIndex());
+}
+void ReadThread::removeConnection(std::shared_ptr<ConnectSession> spConnect)
+{
+	int sock = spConnect->getFd();
+	upImpl_->spReactor_->remove(sock);
+	auto iter = connectionManager_.find(sock);
+	if (iter != connectionManager_.end())
+	{
+		iter->second->close();
+		timeWheel_.remove(iter->second->getFd(), iter->second->getRefIndex());
+		connectionManager_.erase(sock);
+	}
+}
+void ReadThread::resetConnection(std::shared_ptr<ConnectSession> spConnect)
+{
+	timeWheel_.resetSock(spConnect->getFd(), spConnect->getRefIndex());
+}
+
+void ReadThread::pushToQueue(std::shared_ptr<MessagePackage> spMessage)
+{
+	spQueue_->push(std::move(spMessage));
 }
 
 TimeWheel& ReadThread::getTimeWheel()

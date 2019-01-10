@@ -4,7 +4,7 @@
 #include"SnBuffer.h"
 #include"Reactor.h"
 #include"Session.h"
-#include"HttpServer.h"
+#include"HttpHandler.h"
 #include"HttpResponse.h"
 #include"Global.h"
 #include"MessageProcessThread.h"
@@ -20,19 +20,21 @@ void MessageProcessThread::run()
 			continue;
 		}
 		//LOG_INFO(spMessage->buffer.data() + sizeof(int));
-		//std::lock_guard<std::mutex> lg(spMessage->spConnect->mutex_);
-		//spMessage->spConnect->writeBuffer.append(spMessage->buffer.data() + sizeof(int), spMessage->size - sizeof(int));
-		//spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent);
-
-		HttpMessagePackagePtr spHttpMessage = std::dynamic_pointer_cast<HttpMessagePackage>(spMessage);
-		LOG_INFO() << spHttpMessage->httpRequset.getContent().data();
-		HttpResponse resp;
-		resp.setCode(HttpResponse::C200);
-		std::string ret = "hello world";
-		resp.setContent(ret);
-		std::string strResp = resp.serialize();
 		std::lock_guard<std::mutex> lg(spMessage->spConnect->writeMutex);
-		spMessage->spConnect->writeBuffer.append(strResp.data(), strResp.size());
-		spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent); 
+		int size = spMessage->size - sizeof(int);
+		spMessage->spConnect->writeBuffer.append((const char*)&size, sizeof(int));
+		spMessage->spConnect->writeBuffer.append(spMessage->buffer.data() + sizeof(int), spMessage->size - sizeof(int));
+		spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent);
+
+		//HttpMessagePackagePtr spHttpMessage = std::dynamic_pointer_cast<HttpMessagePackage>(spMessage);
+		//LOG_INFO() << spHttpMessage->httpRequset.getContent().data();
+		//HttpResponse resp;
+		//resp.setCode(HttpResponse::C200);
+		//std::string ret = "hello world";
+		//resp.setContent(ret);
+		//std::string strResp = resp.serialize();
+		//std::lock_guard<std::mutex> lg(spMessage->spConnect->writeMutex);
+		//spMessage->spConnect->writeBuffer.append(strResp.data(), strResp.size());
+		//spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent); 
 	}
 }

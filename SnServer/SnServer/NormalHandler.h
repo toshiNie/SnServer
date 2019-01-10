@@ -26,5 +26,4 @@ protected:
 protected:
 	ConnectSessionPtr spConnect_;
 	ReactorPtr spReactor_;
-	std::shared_ptr<ReadThread> spThread_;
 };

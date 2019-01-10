@@ -46,6 +46,15 @@
     <Filter Include="头文件\Http">
       <UniqueIdentifier>{592a6330-4735-44e9-9527-eadf934ff2d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\test">
+      <UniqueIdentifier>{767dc3a2-83dc-4128-8a81-7f556486a69a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\EventHandler">
+      <UniqueIdentifier>{22a514ca-d42a-4a82-8948-aa878a5e4308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\EventHandler">
+      <UniqueIdentifier>{838cefcf-d352-4fb0-9f22-7ecaddd907d9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -72,13 +81,7 @@
     <ClInclude Include="Reactor.h">
       <Filter>头文件\Reactor</Filter>
     </ClInclude>
-    <ClInclude Include="Log.h">
-      <Filter>头文件\Log</Filter>
-    </ClInclude>
     <ClInclude Include="LogFile.h">
-      <Filter>头文件\Log</Filter>
-    </ClInclude>
-    <ClInclude Include="LogThread.h">
       <Filter>头文件\Log</Filter>
     </ClInclude>
     <ClInclude Include="FileUtil.h">
@@ -114,23 +117,14 @@
     <ClInclude Include="noncopyable.h">
       <Filter>头文件\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="EchoServer.h">
-      <Filter>头文件\Server</Filter>
-    </ClInclude>
     <ClInclude Include="TcpServer.h">
       <Filter>头文件\Server</Filter>
     </ClInclude>
     <ClInclude Include="Session.h">
       <Filter>头文件\Reactor</Filter>
     </ClInclude>
-    <ClInclude Include="TimeHandler.h">
-      <Filter>头文件\Reactor</Filter>
-    </ClInclude>
     <ClInclude Include="Time.h">
       <Filter>头文件\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="HttpServer.h">
-      <Filter>头文件\Server</Filter>
     </ClInclude>
     <ClInclude Include="HttpRequst.h">
       <Filter>头文件\Http</Filter>
@@ -147,14 +141,38 @@
     <ClInclude Include="TimeEvent.h">
       <Filter>头文件\Reactor</Filter>
     </ClInclude>
+    <ClInclude Include="AsyncLog.h">
+      <Filter>头文件\Log</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleBufferedQueue.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="LinkList.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="inifile.h">
+      <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Connector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadLocalManager.h">
+      <Filter>头文件\Thread</Filter>
+    </ClInclude>
     <ClInclude Include="AcceptHandler.h">
-      <Filter>头文件\Reactor</Filter>
+      <Filter>头文件\EventHandler</Filter>
     </ClInclude>
     <ClInclude Include="EventHandler.h">
-      <Filter>头文件\Reactor</Filter>
+      <Filter>头文件\EventHandler</Filter>
     </ClInclude>
     <ClInclude Include="NormalHandler.h">
-      <Filter>头文件\Reactor</Filter>
+      <Filter>头文件\EventHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeHandler.h">
+      <Filter>头文件\EventHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="HttpHandler.h">
+      <Filter>头文件\EventHandler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -176,19 +194,7 @@
     <ClCompile Include="LogFile.cpp">
       <Filter>源文件\Log</Filter>
     </ClCompile>
-    <ClCompile Include="Log.cpp">
-      <Filter>源文件\Log</Filter>
-    </ClCompile>
-    <ClCompile Include="LogThread.cpp">
-      <Filter>源文件\Log</Filter>
-    </ClCompile>
-    <ClCompile Include="TimeHandler.cpp">
-      <Filter>源文件\Reactor</Filter>
-    </ClCompile>
     <ClCompile Include="TcpServer.cpp">
-      <Filter>源文件\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="EchoServer.cpp">
       <Filter>源文件\Server</Filter>
     </ClCompile>
     <ClCompile Include="FileUtil.cpp">
@@ -212,20 +218,32 @@
     <ClCompile Include="HttpParser.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="HttpServer.cpp">
-      <Filter>源文件\Server</Filter>
-    </ClCompile>
     <ClCompile Include="TimeWheel.cpp">
       <Filter>源文件\Utils</Filter>
     </ClCompile>
     <ClCompile Include="TimeEvent.cpp">
       <Filter>源文件\Reactor</Filter>
     </ClCompile>
-    <ClCompile Include="AcceptHandler.cpp">
-      <Filter>源文件\Reactor</Filter>
+    <ClCompile Include="AsyncLog.cpp">
+      <Filter>源文件\Log</Filter>
+    </ClCompile>
+    <ClCompile Include="test\HttpParserTest.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="test\main.cpp">
+      <Filter>源文件\test</Filter>
+    </ClCompile>
+    <ClCompile Include="inifile.cpp">
+      <Filter>源文件\Utils</Filter>
     </ClCompile>
     <ClCompile Include="NormalHandler.cpp">
-      <Filter>源文件\Reactor</Filter>
+      <Filter>源文件\EventHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpHandler.cpp">
+      <Filter>源文件\EventHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeHandler.cpp">
+      <Filter>源文件\EventHandler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -39,18 +39,19 @@ int Epoll::waitEvent(std::map<int, EventHandlerPtr>& eventHandles, int timeout)
 }
 void Epoll::addEvent(int handle, Event type)
 {
+	LOG_DEBUG() << type;
 	epoll_event stEvt;
 	bzero(&stEvt, sizeof(stEvt));
 	stEvt.data.fd = handle;
 	if (type & EventType::ReadEvent)
 	{
 		LOG_DEBUG() << "ADD EPOLLIN";
-		stEvt.events = EPOLLIN;
+		stEvt.events |= EPOLLIN;
 	}
 	if (type &EventType::WriteEvent)
 	{
 		LOG_DEBUG() << "ADD EPOLLOUT";
-		stEvt.events = EPOLLOUT;
+		stEvt.events |= EPOLLOUT;
 	}
 	if (0 != epoll_ctl(epollFd_, EPOLL_CTL_ADD, handle, &stEvt))
 	{

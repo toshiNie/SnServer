@@ -1,8 +1,9 @@
 #pragma once
 #include"Message.h"
 #include"TimeWheel.h"
+#include "ThreadLocalManager.h"
 
-class ReadThread : public std::enable_shared_from_this<ReadThread>
+class ReadThread : public ThreadLocalManager
 {
 public:
 	ReadThread(int listenfd, MessageQueuePtr spQueue,std::mutex* mutex = nullptr);
@@ -26,6 +27,11 @@ public:
 	std::map<int, std::shared_ptr<ConnectSession> > & getManager();
 
 	MessageQueuePtr getQueue();
+
+	virtual void addConnection(std::shared_ptr<ConnectSession> spConnect);
+	virtual void removeConnection(std::shared_ptr<ConnectSession> spConnect);
+	virtual void resetConnection(std::shared_ptr<ConnectSession> spConnect);
+	virtual void pushToQueue(std::shared_ptr<MessagePackage> spMessage);
 
 private:
 	struct Impl;

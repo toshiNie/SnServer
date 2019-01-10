@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\ubuntu14\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\ubuntu14\include;E:\ubuntu14\git\SnServer\SnServer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,6 +102,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>E:\ubuntu14\git\SnServer\SnServer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,7 +148,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AcceptHandler.h" />
-    <ClInclude Include="EchoServer.h" />
+    <ClInclude Include="Connector.h" />
+    <ClInclude Include="DoubleBufferedQueue.h" />
     <ClInclude Include="Env.h" />
     <ClInclude Include="Epoll.h" />
     <ClInclude Include="EventHandler.h" />
@@ -155,8 +157,9 @@
     <ClInclude Include="Global.h" />
     <ClInclude Include="HttpRequst.h" />
     <ClInclude Include="HttpResponse.h" />
-    <ClInclude Include="HttpServer.h" />
-    <ClInclude Include="Log.h" />
+    <ClInclude Include="HttpHandler.h" />
+    <ClInclude Include="inifile.h" />
+    <ClInclude Include="LinkList.h" />
     <ClInclude Include="LogFile.h" />
     <ClInclude Include="AsyncLog.h" />
     <ClInclude Include="Message.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="TcpServer.h" />
+    <ClInclude Include="ThreadLocalManager.h" />
     <ClInclude Include="ThreadPool.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="TimeEvent.h" />
@@ -183,17 +187,15 @@
     <ClInclude Include="TreadRAII.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AcceptHandler.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="HttpParser.cpp" />
-    <ClCompile Include="HttpServer.cpp" />
+    <ClCompile Include="HttpHandler.cpp" />
+    <ClCompile Include="inifile.cpp" />
     <ClCompile Include="MessageProcessThread.cpp" />
     <ClCompile Include="NormalHandler.cpp" />
     <ClCompile Include="Session.cpp" />
-    <ClCompile Include="EchoServer.cpp" />
     <ClCompile Include="Epoll.cpp" />
     <ClCompile Include="FileUtil.cpp" />
-    <ClCompile Include="Log.cpp" />
     <ClCompile Include="LogFile.cpp" />
     <ClCompile Include="AsyncLog.cpp" />
     <ClCompile Include="Reactor.cpp" />
@@ -208,6 +210,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="TcpServer.cpp" />
+    <ClCompile Include="test\HttpParserTest.cpp" />
+    <ClCompile Include="test\main.cpp" />
     <ClCompile Include="TimeEvent.cpp" />
     <ClCompile Include="TimeHandler.cpp" />
     <ClCompile Include="TimeWheel.cpp" />

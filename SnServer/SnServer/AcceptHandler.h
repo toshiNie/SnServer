@@ -27,9 +27,8 @@ public:
 		}
 		socketutil::setNonblocking(sock);
 		typename HandlerType::ConnectSessionPtr spConnect(new typename HandlerType::ConnectSessionType(sock, spReactor_));
-		auto spThisThread = spReactor_->wpThisThead_.lock();
-		spThisThread->getTimeWheel().addSock(sock, spConnect->getRefIndex());
-		spThisThread->getManager().insert(std::make_pair(sock, spConnect));
+		auto spThisThread = spReactor_->wpThreadLocalManager.lock();
+		spThisThread->addConnection(spConnect);
 		auto spReadHandler = std::make_shared<HandlerType>(spConnect, spReactor_);
 		spReadHandler->setHandlerType(ReadEvent);
 		spReactor_->addHandler(spReadHandler);

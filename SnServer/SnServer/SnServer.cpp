@@ -6,6 +6,7 @@
 #include "AsyncLog.h"
 #include "TcpServer.h"
 #include "SigProcess.h"
+#include "Connector.h"
 
 int main()
 {
@@ -13,12 +14,18 @@ int main()
 	AsyncLog& thread = AsyncLog::getInstance();
 	registeSig();
 	//FILE * file = fopen("/dev/null","w");	
-	//FILE * file = fopen("/dev/stdout","we");
-	//thread.addLogFile("default", file);
-	thread.addLogFile("default", "ns.log");
+	FILE * file = fopen("/dev/stdout","we");
+	thread.addLogFile("default", file);
+	//thread.addLogFile("default", "ns.log");
 	thread.run();
-	TcpServer server;
-	server.run();
+	auto spConnect = std::make_shared<ConnectThread>();
+	spConnect->init();
+	spConnect->run();
+	//Connector connector;
+	//connector.init();
+	//connector.run();
+	//TcpServer server;
+	//server.run();
     return 0;
 }
 

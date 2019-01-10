@@ -3,7 +3,7 @@
 #include"AsyncLog.h"
 
 
-AsyncLog::AsyncLog():isCancel_(false),level_(LogLevel::INFO),rollSize_(1024*1024*100)
+AsyncLog::AsyncLog():isCancel_(false),level_(LogLevel::DEBUG),rollSize_(1024*1024*100)
 {
 
 }

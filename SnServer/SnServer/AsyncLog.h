@@ -27,7 +27,7 @@ public:
 		{
 				isFileExsit_ = spLogFile->create();
 		}
-		LogThread(FILE* file) :spLogFile(std::make_shared<LogFile>(file))
+		LogThread(FILE* file) :spLogFile(std::make_shared<LogFile>(file)), isFileExsit_(true)
 		{
 
 		}

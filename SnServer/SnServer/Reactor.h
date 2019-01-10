@@ -4,6 +4,7 @@
 #define REACTOR_H_
 
 #include"EventHandler.h"
+#include"ThreadLocalManager.h"
 #include"Epoll.h"
 
 class ReadThread;
@@ -17,7 +18,7 @@ public:
 	void mod(int fd, Event event);
 	void loop(int timeout);
 
-	std::weak_ptr<ReadThread> wpThisThead_;
+	std::weak_ptr<ThreadLocalManager> wpThreadLocalManager;
 private:
 	
 	HandlerMap mapHandler_;
