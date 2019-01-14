@@ -105,7 +105,12 @@ class SnBuffer
 public:
 	SnBuffer(size_t size = 1024) : readIndex_(0),writeIndex_(0),buffer_(size)
 	{
-
+	}
+	SnBuffer(SnBuffer&& rhs)
+	{
+		buffer_.swap(rhs.buffer_);
+		std::swap(readIndex_ ,rhs.readIndex_);
+		std::swap(writeIndex_, rhs.writeIndex_);
 	}
 
 	void append(const char* data, size_t size)
@@ -117,6 +122,23 @@ public:
 		memcpy(buffer_.data() + writeIndex_, data, size);
 		writeIndex_ += size;
 	}
+	void moveAppend(char* data, size_t size)
+	{
+		if (buffer_.size() - writeIndex_ < size)
+		{
+			buffer_.resize(buffer_.size() + size);
+		}
+		memmove(buffer_.data() + writeIndex_, data, size);
+		writeIndex_ += size;
+	}
+	void append(SnBuffer& buffer)
+	{
+		append(buffer.getReadbuffer(), buffer.size());
+	}
+	void append(SnBuffer&& buffer)
+	{
+		moveAppend(buffer.getReadbuffer(), buffer.size());
+	}
 	size_t size()
 	{
 		return writeIndex_ - readIndex_;
@@ -125,6 +147,7 @@ public:
 	{
 		return buffer_.size() - writeIndex_;
 	}
+
 	
 	char * getReadbuffer()
 	{
@@ -148,6 +171,10 @@ public:
 	void consumHead(size_t size)
 	{
 		readIndex_ += size;
+		if (readIndex_ == writeIndex_)
+		{
+			readIndex_ = writeIndex_ = 0;
+		}
 	}
 
 	int read(std::vector<char> &buffer, int len)

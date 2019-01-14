@@ -3,7 +3,7 @@
 #include"TimeWheel.h"
 #include "ThreadLocalManager.h"
 
-class ReadThread : public ThreadLocalManager
+class ReadThread : public ThreadLocalManager, public std::enable_shared_from_this<ReadThread>
 {
 public:
 	ReadThread(int listenfd, MessageQueuePtr spQueue,std::mutex* mutex = nullptr);

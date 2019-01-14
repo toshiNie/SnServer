@@ -24,6 +24,7 @@
 #include<list>
 #include<condition_variable>
 #include<cctype>
+#include<unordered_map>
 
 //#ifdef WIN32
 //#include<winsock.h>

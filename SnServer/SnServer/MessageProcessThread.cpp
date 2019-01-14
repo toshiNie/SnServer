@@ -8,33 +8,41 @@
 #include"HttpResponse.h"
 #include"Global.h"
 #include"MessageProcessThread.h"
+#include <fstream>  
 
+
+void sendback(std::shared_ptr<ConnectSession> spConnection, std::shared_ptr<SnBuffer> spBuffer)
+{
+	spConnection->writeBuffer.append(std::move(*spBuffer));
+	spConnection->getReactor()->mod(spConnection->getFd(), WriteEvent);
+}
 
 void MessageProcessThread::run()
 {
 	while (!Global::cancleFlag)
 	{
 		auto spMessage = spMessageQueue_->pop();
-		if (!spMessage)
-		{
-			continue;
-		}
 		//LOG_INFO(spMessage->buffer.data() + sizeof(int));
-		std::lock_guard<std::mutex> lg(spMessage->spConnect->writeMutex);
-		int size = spMessage->size - sizeof(int);
-		spMessage->spConnect->writeBuffer.append((const char*)&size, sizeof(int));
-		spMessage->spConnect->writeBuffer.append(spMessage->buffer.data() + sizeof(int), spMessage->size - sizeof(int));
-		spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent);
+		//SnBuffer buffer;
+		//int size = spMessage->size - sizeof(int);
+		//buffer.append((const char*)&size, sizeof(int));
+		//buffer.append(spMessage->buffer.data() + sizeof(int), spMessage->size - sizeof(int));
+		//spMessage->spConnect->getReactor()->addNoticeEvent(std::bind(&MessageProcessThread::sendback, this, std::move(spMessage->spConnect), std::move(buffer)));
 
-		//HttpMessagePackagePtr spHttpMessage = std::dynamic_pointer_cast<HttpMessagePackage>(spMessage);
-		//LOG_INFO() << spHttpMessage->httpRequset.getContent().data();
-		//HttpResponse resp;
-		//resp.setCode(HttpResponse::C200);
-		//std::string ret = "hello world";
-		//resp.setContent(ret);
-		//std::string strResp = resp.serialize();
-		//std::lock_guard<std::mutex> lg(spMessage->spConnect->writeMutex);
-		//spMessage->spConnect->writeBuffer.append(strResp.data(), strResp.size());
-		//spMessage->spConnect->getReactor()->mod(spMessage->spConnect->getFd(), WriteEvent); 
+
+		HttpMessagePackagePtr spHttpMessage = std::dynamic_pointer_cast<HttpMessagePackage>(spMessage);
+		LOG_INFO() << spHttpMessage->httpRequset.getContent().data();
+		HttpResponse resp;
+		resp.setCode(HttpResponse::C200);
+		std::ifstream fileStream("GitHub.html", std::ios::in);
+		std::stringstream ss;
+		ss << fileStream.rdbuf();
+		fileStream.close();
+		resp.setContent(ss.str());
+		std::string strResp = resp.serialize();
+		std::shared_ptr<SnBuffer> spBuffer(new SnBuffer);
+		spBuffer->append(strResp.data(), strResp.size());
+		spMessage->spConnect->getReactor()->addNoticeEvent(std::bind(&sendback, spMessage->spConnect, spBuffer));
 	}
+	
 }

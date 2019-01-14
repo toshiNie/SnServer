@@ -45,7 +45,6 @@ void NomalEventHandler::readHandler()
 void NomalEventHandler::writeHandler()
 {
 	auto spConnManager = spReactor_->wpThreadLocalManager.lock();
-	std::lock_guard<std::mutex> lg(spConnect_->writeMutex);
 	spConnManager->resetConnection(spConnect_);
 	int w = ::write(spConnect_->getFd(), spConnect_->writeBuffer.getReadbuffer(), spConnect_->writeBuffer.size());
 	LOG_INFO() << "writebuffer size: " << spConnect_->writeBuffer.size();

@@ -24,7 +24,7 @@ public:
 	HttpRequest()
 		:method_(Method::UNKNOWMEN),
 		version_(Version::UNKNOWMEN),
-		contentLength_(-1),
+		contentLength_(0),
 		content_(0)
 	{
 
@@ -154,6 +154,16 @@ public:
 	{
 		return params_;
 	}
+
+	Method getMethod()
+	{
+		return method_;
+	}
+	Version getVersion()
+	{
+		return version_;
+	}
+
 private:
 	Method method_;
 	Version version_;

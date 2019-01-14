@@ -3,7 +3,7 @@
 #include "AsyncLog.h"
 #include "Epoll.h"
 
-int Epoll::waitEvent(std::map<int, EventHandlerPtr>& eventHandles, int timeout)
+int Epoll::waitEvent(std::unordered_map<int, EventHandlerPtr>& eventHandles, int timeout)
 {
 
 	std::vector<epoll_event> vecEvents(eventSize_);

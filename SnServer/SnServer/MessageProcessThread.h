@@ -9,7 +9,10 @@ public:
 
 	void run();
 
+
 private:
+	//void sendback(std::shared_ptr<ConnectSession> spConnection, SnBuffer&& buffer);
+
 	MessageQueuePtr spMessageQueue_;
 };
 typedef std::shared_ptr<MessageProcessThread> WorkerPtr;

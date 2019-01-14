@@ -3,14 +3,19 @@
 #include"SocketUtil.h"
 struct Address
 {
-	const char* strIp_;
+	std::string ip;
 	int port;
 	bool isIpv6_;
 	sockaddr_in addr_;
+
+	Address(const std::string& strIp, int iPort) :ip(strIp), port(iPort)
+	{
+	}
+	Address(){}
 	sockaddr* ToIpv4Addr()
 	{
 		addr_.sin_family = AF_INET;
-		addr_.sin_addr.s_addr = inet_addr(strIp_);
+		addr_.sin_addr.s_addr = inet_addr(ip.c_str());
 		addr_.sin_port = htons(port);
 		return (struct sockaddr*)&addr_;
 	}

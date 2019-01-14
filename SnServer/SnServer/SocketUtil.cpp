@@ -3,7 +3,7 @@
 
 namespace socketutil
 {
-	int setNonblocking(int fd)
+	bool setNonblocking(int fd)
 	{
 		int flags;
 		flags = fcntl(fd, F_GETFL, 0);
@@ -13,11 +13,8 @@ namespace socketutil
 		}
 		flags |= O_NONBLOCK;
 		int ret = fcntl(fd, F_SETFL, flags);
-		if (ret == -1)
-		{
-			return ret;
-		}
-		return 0;
+		return ret >= 0;
+
 	}
 	bool setReuseAddr(int fd)
 	{

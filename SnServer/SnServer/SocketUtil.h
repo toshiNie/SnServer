@@ -3,7 +3,7 @@
 #define SOCKETUTIL_H_
 namespace socketutil
 {
-	int setNonblocking(int fd);
+	bool setNonblocking(int fd);
 	bool setReuseAddr(int fd);
 	bool setReusePort(int fd);
 	bool setTcpNoDelay(int fd);

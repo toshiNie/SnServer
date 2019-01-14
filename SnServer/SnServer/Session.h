@@ -18,11 +18,8 @@ public:
 	ReactorPtr getReactor();
 
 	void close();
-
 	SnBuffer readBuffer;
 	SnBuffer writeBuffer;
-
-	std::mutex writeMutex;
 protected:
 	int sock_;
 	int index_;

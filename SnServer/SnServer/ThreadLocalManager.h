@@ -2,7 +2,7 @@
 #include<memory>
 class ConnectSession;
 class MessagePackage;
-class ThreadLocalManager: public std::enable_shared_from_this<ThreadLocalManager>
+class ThreadLocalManager
 {
 public:
 	ThreadLocalManager() {};

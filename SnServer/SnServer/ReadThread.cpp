@@ -40,7 +40,7 @@ void ReadThread::init()
 	timeWheel_.setFunc(std::bind(&ReadThread::onTimerRemoveClient, this, std::placeholders::_1));
 	TimeEventPtr spTimeEvent = timeWheel_.getEvent(5000);
 	EventHandlerPtr spTimeEventHandler(new TimeHandler(spTimeEvent, upImpl_->spReactor_));
-	upImpl_->spReactor_->addHandler(spTimeEventHandler);
+	//upImpl_->spReactor_->addHandler(spTimeEventHandler);
 	auto spEventHandler = std::make_shared<AcceptHandler<HttpNormalHandler> >(listenFd_, upImpl_->spReactor_);
 	upImpl_->spReactor_->addHandler(spEventHandler);
 

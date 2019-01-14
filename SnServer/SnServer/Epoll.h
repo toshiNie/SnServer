@@ -4,15 +4,14 @@
 class Epoll
 {
 public:
-	Epoll():eventSize_(0)
+	Epoll():eventSize_(0), epollFd_(epoll_create1(0))
 	{
-		epollFd_ = epoll_create1(0);
 	}
 	~Epoll()
 	{
 		::close(epollFd_);
 	}
-	int waitEvent(std::map<int, EventHandlerPtr>& eventHandles, int timeout);
+	int waitEvent(std::unordered_map<int, EventHandlerPtr>& eventHandles, int timeout);
 	void addEvent(int handle, Event type);
 	bool remove(int handle);
 	bool mod(int handle, Event event);

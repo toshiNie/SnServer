@@ -5,7 +5,7 @@
 
 void processCtrl_C(int sig)
 {
-	printf("ctrl_C:%d\n",errno);
+	printf("ctrl_C");
 	AsyncLog::getInstance().flush();
 	Global::cancleFlag = true;
 	printf("exit\n");
@@ -28,7 +28,7 @@ void blockSIGINT(int signo) {
 
 Sigfunc* addSig(int sig, Sigfunc* func)
 {
-	return signal(sig, func);
+	return addSignal(sig, func);
 }
 
 Sigfunc* addSignal(int signo, Sigfunc* func)
@@ -50,7 +50,6 @@ Sigfunc* addSignal(int signo, Sigfunc* func)
 #endif
 	}
 	int ret = sigaction(signo, &act, &oact);
-	std::cout << ret << std::endl;
 	if (ret < 0)
 	{
 		return nullptr;

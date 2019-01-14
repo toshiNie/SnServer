@@ -1,29 +1,19 @@
 cmake_minimum_required(VERSION 2.8)
 project(SnServer)
 set (CMAKE_CXX_COMPILER "g++")
-add_definitions(-O0 -g -DSA_RESTART)
-add_compile_options(-std=c++11)
+include( CheckCXXCompilerFlag )
+check_cxx_compiler_flag("-std=c++11"   COMPILER_SUPPORTS_CXX11 )
+if( COMPILER_SUPPORTS_CXX11 )
+    if( CMAKE_COMPILER_IS_GNUCXX )
+        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11" )
+    else()
+        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
+    endif()
+else()
+    message("not support c++11")
+endif()
+SET(CMAKE_BUILD_TYPE "Release")
+file(GLOB SRCS *.cpp)
+#add_definitions(-O2 -g -DSA_RESTART)
 link_libraries(pthread)
-add_executable(SnServer
-	stdafx.cpp
-	Reactor.cpp
-	Epoll.cpp
-	TcpServer.cpp
-	SocketUtil.cpp
-	SigProcess.cpp
-  AsyncLog.cpp
-  Inifile.cpp
-	LogFile.cpp
-	TimeHandler.cpp
-	Global.cpp
-	ReadThread.cpp
-	Session.cpp
-	MessageProcessThread.cpp
-	HttpParser.cpp
-  	TimeWheel.cpp
-	NormalHandler.cpp
-  HttpHandler.cpp
-  	TimeEvent.cpp
-	SnServer.cpp
-	FileUtil.cpp)
-
+add_executable(${PROJECT_NAME} ${SRCS})
