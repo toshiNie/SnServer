@@ -55,26 +55,26 @@ public:
 	{
 	}
 	Socket(int fd) :fd_(fd) {}
-	int GetSockFd()
+	int getSockFd()
 	{
 		return fd_;
 	}
-	bool  BindAddress(Address& address)
+	bool  bindAddress(Address& address)
 	{
 		return ::bind(fd_, address.toAddr(isIpv6_), address.getAddrSize(isIpv6_)) == 0;
 	}
-	bool Listen(int listenSize)
+	bool listen(int backlog)
 	{
-		return ::listen(fd_, listenSize) == 0;
+		return ::listen(fd_, backlog) == 0;
 	}
-	Socket Accept(Address& address)
+	Socket accept(Address& address)
 	{
 		socklen_t len = address.getAddrSize(isIpv6_);
 
 		int fd=::accept(fd_, address.toAddr(isIpv6_),&len);
 		return Socket(fd);
 	}
-	int Accept()
+	int accept()
 	{
 		int fd = ::accept(fd_, nullptr, nullptr);
 		return fd;

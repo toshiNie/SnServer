@@ -2,7 +2,7 @@
 #include"EventHandler.h"
 #include"SocketUtil.h"
 #include"TimeWheel.h"
-#include"ReadThread.h"
+#include"LoopThread.h"
 #include"Reactor.h"
 
 template<typename HandlerType>
@@ -18,13 +18,14 @@ public:
 	}
 	virtual void readHandler() override
 	{
-		LOG_INFO() << "accept handle";
 		int sock = ::accept(sock_, nullptr, nullptr);
-		LOG_INFO() << "accept sock: " << sock;
+		
 		if (sock < 0)
 		{
+			LOG_ERROR() << "accept error: " << errno << strerror(errno);
 			return;
 		}
+		LOG_INFO() << "accept sock: " << sock;
 		socketutil::setNonblocking(sock);
 		typename HandlerType::ConnectSessionPtr spConnect(new typename HandlerType::ConnectSessionType(sock, spReactor_));
 		auto spThisThread = spReactor_->wpThreadLocalManager.lock();

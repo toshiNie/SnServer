@@ -3,29 +3,35 @@
 #include "SnBuffer.h"
 #include "TcpServer.h"
 
-TcpServer::TcpServer() :spQueue_(std::make_shared<MessageQueue>()), pollNum_(2), workerNum_(2)
+TcpServer::TcpServer() :spQueue_(std::make_shared<MessageQueue>()), pollNum_(1), workerNum_(1), listenSocket_(false)
 {
 }
 TcpServer::~TcpServer()
 {
+	//listenSocket_.close();
 }
 void TcpServer::run()
 {
+	//listenAddress_.ip = "::/0";
 	listenAddress_.ip = "0.0.0.0";
 	listenAddress_.port = 4321;
-	listtenSocket_.BindAddress(listenAddress_);
-	if (!listtenSocket_.Listen(65535))
+
+	if (!listenSocket_.bindAddress(listenAddress_))
 	{
-		LOG_ERROR() << " listen failed";
+		LOG_ERROR() << "bind error :" << errno;
+	}
+	if (!listenSocket_.listen(511))
+	{
+		LOG_ERROR() << " listen failed: " << errno;
 		return;
 	}
-	socketutil::setNonblocking(listtenSocket_.GetSockFd());
-	LOG_INFO() << "listen OK";
+	socketutil::setNonblocking(listenSocket_.getSockFd());
+	LOG_INFO() << "listen OK :" << listenSocket_.getSockFd();
 	std::vector<MessageQueuePtr> vecQueue;
 	for (int i = 0; i < pollNum_; ++i)
 	{
-		auto spReadThread = std::make_shared<ReadThread>(listtenSocket_.GetSockFd());
-		vecThreads_.emplace_back(ThreadRAII(std::thread(std::bind(&ReadThread::run, spReadThread)), ThreadRAII::DtorAction::join));
+		auto spReadThread = std::make_shared<LoopThread>(listenSocket_.getSockFd());
+		vecThreads_.emplace_back(ThreadRAII(std::thread(std::bind(&LoopThread::run, spReadThread)), ThreadRAII::DtorAction::join));
 		vecQueue.push_back(spReadThread->getQueue());
 	}
 	for (int i = 0; i < workerNum_; ++i)

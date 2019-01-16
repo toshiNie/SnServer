@@ -53,6 +53,11 @@ public:
 		content_ = content;
 		AddHeader("Content-Length", std::to_string(content.size()));
 	}
+	void setContent(std::string&& content)
+	{
+		AddHeader("Content-Length", std::to_string(content.size()));
+		content_ = content;
+	}
 
 	std::string serialize ()
 	{

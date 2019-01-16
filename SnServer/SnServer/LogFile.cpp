@@ -66,7 +66,7 @@ bool LogFile::rollFile()
 	std::string strFileName;
 	while (true)
 	{
-		strFileName = strBaseName_ + NsTime::GetStrTimeStamp(".%Y-%m-%d.") + std::to_string(fileNames_.size());
+		strFileName = strBaseName_ + SnTime::getStrTimeStamp(".%Y-%m-%d.") + std::to_string(fileNames_.size());
 		spWriteableFile_ = std::make_shared<PosixWritableFile>(strFileName.c_str());
 		if (spWriteableFile_->isExist())
 		{

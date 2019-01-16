@@ -103,7 +103,7 @@ private:
 class SnBuffer
 {
 public:
-	SnBuffer(size_t size = 1024) : readIndex_(0),writeIndex_(0),buffer_(size)
+	SnBuffer(size_t size = 4096) : readIndex_(0),writeIndex_(0),buffer_(size)
 	{
 	}
 	SnBuffer(SnBuffer&& rhs)

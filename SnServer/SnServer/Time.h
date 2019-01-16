@@ -1,17 +1,16 @@
 #pragma once
 #include"stdafx.h"
-#pragma warning(disable:4996)
-class NsTime
+class SnTime
 {
 public:
-	static std::time_t GetTimeStamp()
+	static std::time_t getTimeStamp()
 	{
 		std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> tp = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now());
 		auto tmp = std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch());
 		return tmp.count();
 	}
 
-	static std::string MillisecondToStr(std::int64_t milliseconds,const char* format)
+	static std::string millisecondToStr(std::int64_t milliseconds,const char* format)
 	{
 		std::chrono::milliseconds ms(milliseconds);
 		std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> t1(ms);
@@ -21,8 +20,9 @@ public:
 		strftime(tmp, sizeof(tmp), format, localtime(&t));
 		return tmp;
 	}
-	static std::string GetStrTimeStamp(const char* format = "%Y-%m-%d %H.%M.%S")
+	static std::string getStrTimeStamp(const char* format = "%Y-%m-%d %H.%M.%S")
 	{
-		return MillisecondToStr(GetTimeStamp(),format);
+		return millisecondToStr(getTimeStamp(),format);
+
 	}
 };

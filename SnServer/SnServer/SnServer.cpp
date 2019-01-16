@@ -10,7 +10,7 @@
 
 int main()
 {
-	std::cout << NsTime::GetStrTimeStamp() << std::endl;
+	std::cout << SnTime::getStrTimeStamp() << std::endl;
 	AsyncLog& thread = AsyncLog::getInstance();
 	registeSig();
 	//FILE * file = fopen("/dev/null","w");	

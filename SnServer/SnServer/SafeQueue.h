@@ -21,7 +21,7 @@ public:
 		{
 			condNotFull_.wait_for(lck, std::chrono::duration<int>(1));
 		}
-		queue_.push(std::forward<T>(x));
+		queue_.emplace(std::forward<T>(x));
 		condNotEmpty_.notify_one();
 	}
 	T pop()

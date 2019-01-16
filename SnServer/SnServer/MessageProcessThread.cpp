@@ -34,12 +34,15 @@ void MessageProcessThread::run()
 		LOG_INFO() << spHttpMessage->httpRequset.getContent().data();
 		HttpResponse resp;
 		resp.setCode(HttpResponse::C200);
-		std::ifstream fileStream("GitHub.html", std::ios::in);
-		std::stringstream ss;
-		ss << fileStream.rdbuf();
-		fileStream.close();
-		resp.setContent(ss.str());
+		//std::ifstream fileStream("GitHub.html", std::ios::in);
+		//std::stringstream ss;
+		//ss << fileStream.rdbuf();
+		//fileStream.close();
+		//resp.setContent(ss.str());
+
+		resp.setContent(std::string(spHttpMessage->httpRequset.getContent().data(), spHttpMessage->httpRequset.getContent().size()));
 		std::string strResp = resp.serialize();
+		
 		std::shared_ptr<SnBuffer> spBuffer(new SnBuffer);
 		spBuffer->append(strResp.data(), strResp.size());
 		spMessage->spConnect->getReactor()->addNoticeEvent(std::bind(&sendback, spMessage->spConnect, spBuffer));

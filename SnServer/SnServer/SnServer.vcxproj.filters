@@ -55,6 +55,12 @@
     <Filter Include="源文件\EventHandler">
       <UniqueIdentifier>{838cefcf-d352-4fb0-9f22-7ecaddd907d9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\HTTP">
+      <UniqueIdentifier>{d8bed8d6-610a-4389-81af-4caa5ce2ce38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Protobuf">
+      <UniqueIdentifier>{136da624-9e44-412c-af11-82f7759c0360}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -109,9 +115,6 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="MessageProcessThread.h">
-      <Filter>头文件\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="ReadThread.h">
       <Filter>头文件\Thread</Filter>
     </ClInclude>
     <ClInclude Include="noncopyable.h">
@@ -174,6 +177,21 @@
     <ClInclude Include="HttpHandler.h">
       <Filter>头文件\EventHandler</Filter>
     </ClInclude>
+    <ClInclude Include="Acceptor.h">
+      <Filter>源文件\Reactor</Filter>
+    </ClInclude>
+    <ClInclude Include="Url.h">
+      <Filter>头文件\Http</Filter>
+    </ClInclude>
+    <ClInclude Include="protobuf\ProtoBuf.h">
+      <Filter>头文件\Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="protobuf\addressbook.pb.h">
+      <Filter>头文件\Protobuf</Filter>
+    </ClInclude>
+    <ClInclude Include="LoopThread.h">
+      <Filter>头文件\Thread</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -209,14 +227,8 @@
     <ClCompile Include="MessageProcessThread.cpp">
       <Filter>源文件\Thread</Filter>
     </ClCompile>
-    <ClCompile Include="ReadThread.cpp">
-      <Filter>源文件\Thread</Filter>
-    </ClCompile>
     <ClCompile Include="Session.cpp">
       <Filter>源文件\Reactor</Filter>
-    </ClCompile>
-    <ClCompile Include="HttpParser.cpp">
-      <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="TimeWheel.cpp">
       <Filter>源文件\Utils</Filter>
@@ -244,6 +256,15 @@
     </ClCompile>
     <ClCompile Include="TimeHandler.cpp">
       <Filter>源文件\EventHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="HttpParser.cpp">
+      <Filter>源文件\HTTP</Filter>
+    </ClCompile>
+    <ClCompile Include="protobuf\addressbook.pb.cc">
+      <Filter>头文件\Protobuf</Filter>
+    </ClCompile>
+    <ClCompile Include="LoopThread.cpp">
+      <Filter>源文件\Thread</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

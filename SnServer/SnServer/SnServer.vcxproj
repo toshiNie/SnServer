@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\ubuntu14\include;E:\ubuntu14\git\SnServer\SnServer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\ubuntu14\include;E:\opensource\protobuf-cpp-3.6.1\install\include;E:\ubuntu14\git\SnServer\SnServer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -102,7 +102,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>E:\ubuntu14\git\SnServer\SnServer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\ubuntu14\include;E:\opensource\protobuf-cpp-3.6.1\install\include;E:\ubuntu14\git\SnServer\SnServer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AcceptHandler.h" />
+    <ClInclude Include="Acceptor.h" />
     <ClInclude Include="Connector.h" />
     <ClInclude Include="DoubleBufferedQueue.h" />
     <ClInclude Include="Env.h" />
@@ -166,8 +167,10 @@
     <ClInclude Include="MessageProcessThread.h" />
     <ClInclude Include="noncopyable.h" />
     <ClInclude Include="NormalHandler.h" />
+    <ClInclude Include="protobuf\addressbook.pb.h" />
+    <ClInclude Include="protobuf\ProtoBuf.h" />
     <ClInclude Include="Reactor.h" />
-    <ClInclude Include="ReadThread.h" />
+    <ClInclude Include="LoopThread.h" />
     <ClInclude Include="SafeQueue.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="SigProcess.h" />
@@ -185,6 +188,7 @@
     <ClInclude Include="TimeWheel.h" />
     <ClInclude Include="HttpParser.h" />
     <ClInclude Include="TreadRAII.h" />
+    <ClInclude Include="Url.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Global.cpp" />
@@ -193,13 +197,14 @@
     <ClCompile Include="inifile.cpp" />
     <ClCompile Include="MessageProcessThread.cpp" />
     <ClCompile Include="NormalHandler.cpp" />
+    <ClCompile Include="protobuf\addressbook.pb.cc" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="Epoll.cpp" />
     <ClCompile Include="FileUtil.cpp" />
     <ClCompile Include="LogFile.cpp" />
     <ClCompile Include="AsyncLog.cpp" />
     <ClCompile Include="Reactor.cpp" />
-    <ClCompile Include="ReadThread.cpp" />
+    <ClCompile Include="LoopThread.cpp" />
     <ClCompile Include="SigProcess.cpp" />
     <ClCompile Include="SnServer.cpp" />
     <ClCompile Include="SocketUtil.cpp" />

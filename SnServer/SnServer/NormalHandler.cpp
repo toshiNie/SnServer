@@ -1,14 +1,14 @@
 #include"stdafx.h"
 #include"AsyncLog.h"
-#include"ReadThread.h"
+#include"LoopThread.h"
 #include"NormalHandler.h"
 
 
-NomalEventHandler::NomalEventHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor) :
+NormalEventHandler::NormalEventHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor) :
 	spReactor_(spReactor), spConnect_(spConnect)
 {
 }
-void NomalEventHandler::readHandler()
+void NormalEventHandler::readHandler()
 {
 	LOG_DEBUG() <<"Readhanlde";
 	auto spConnManager = spReactor_->wpThreadLocalManager.lock();
@@ -20,8 +20,6 @@ void NomalEventHandler::readHandler()
 	{
 		if (errno == EAGAIN)
 		{
-			//r = 0;
-			//spReactor_->mod(spConnect_->getFd(), ReadEvent);
 			return;
 		}
 		LOG_ERROR() << "read error: " << errno;
@@ -37,12 +35,11 @@ void NomalEventHandler::readHandler()
 		LOG_DEBUG() << "read  size: " << r;
 		spConnect_->readBuffer.peek(r);
 		onRead();
-		//spReactor_->mod(spConnect_->getFd(), ReadEvent);
 	}
 	return;
 }
 
-void NomalEventHandler::writeHandler()
+void NormalEventHandler::writeHandler()
 {
 	auto spConnManager = spReactor_->wpThreadLocalManager.lock();
 	spConnManager->resetConnection(spConnect_);
@@ -68,19 +65,19 @@ void NomalEventHandler::writeHandler()
 
 }
 
-void NomalEventHandler::errorHandler()
+void NormalEventHandler::errorHandler()
 {
 	 spReactor_->wpThreadLocalManager.lock()->removeConnection(spConnect_);
 }
 
 
-int NomalEventHandler::getFd()
+int NormalEventHandler::getFd()
 {
 	return spConnect_->getFd();
 }
 
 
-void NomalEventHandler::onRead()
+void NormalEventHandler::onRead()
 {
 	int len = *(int*)spConnect_->readBuffer.getReadbuffer();
 	if (spConnect_->readBuffer.size() >= sizeof(len) + len)
@@ -88,7 +85,7 @@ void NomalEventHandler::onRead()
 		onMessage();
 	}
 }
-void NomalEventHandler::onMessage()
+void NormalEventHandler::onMessage()
 {
 	int len = *(int*)spConnect_->readBuffer.getReadbuffer();
 	auto spMessage = std::make_shared<MessagePackage>();
@@ -99,7 +96,7 @@ void NomalEventHandler::onMessage()
 	spReactor_->wpThreadLocalManager.lock()->pushToQueue(spMessage);
 }
 
-bool NomalEventHandler::onWrite(int len)
+bool NormalEventHandler::onWrite(int len)
 {
 	if (len < spConnect_->writeBuffer.size())
 	{

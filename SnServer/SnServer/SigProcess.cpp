@@ -6,8 +6,9 @@
 void processCtrl_C(int sig)
 {
 	printf("ctrl_C");
+	AsyncLog::getInstance().setCancel();
 	AsyncLog::getInstance().flush();
-	Global::cancleFlag = true;
+	//Global::cancleFlag = true;
 	printf("exit\n");
 	exit(0);
 	//kill(getpid(), 9);

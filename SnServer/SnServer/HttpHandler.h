@@ -33,7 +33,7 @@ public:
 	HttpRequest httpRequset_;
 };
 
-class HttpNormalHandler : public NomalEventHandler
+class HttpNormalHandler : public NormalEventHandler
 {
 public:
 	using  ConnectSessionType = HttpConnectSession;

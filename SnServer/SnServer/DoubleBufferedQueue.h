@@ -29,7 +29,7 @@ public:
 			else
 			{
 				mutex_.unlock();
-				std::cout <<NsTime::GetStrTimeStamp()<< ": change" << std::endl;
+				std::cout << SnTime::getStrTimeStamp()<< ": change" << std::endl;
 			}
 		}
 		T temp(queues_[index_].front());

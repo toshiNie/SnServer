@@ -13,10 +13,9 @@ template <typename HandlerType>
 class ConnectHandler : public EventHandler
 {
 public:
-	ConnectHandler(int sock, ReactorPtr spReactor, std::function<void(std::shared_ptr<ConnectSession>)>&& func)
+	ConnectHandler(int sock, ReactorPtr spReactor)
 		: sock_(sock), 
-		spReactor_(spReactor),
-		addConnectFunc_(func)
+		spReactor_(spReactor)
 	{}
 	void readHandler() override
 	{
@@ -27,9 +26,9 @@ public:
 		typedef typename HandlerType::ConnectSessionPtr ConnectSessionPtr;
 		typedef typename HandlerType::ConnectSessionType ConnectSessionType;
 		ConnectSessionPtr spConnection = std::make_shared<ConnectSessionType>(sock_, spReactor_);
-		addConnectFunc_(spConnection);
+		spReactor_->wpThreadLocalManager.lock()->addConnection(spConnection);
 		EventHandlerPtr spEvent = std::make_shared<HandlerType>(spConnection, spReactor_);
-		spEvent->setHandlerType(WriteEvent|ReadEvent);
+		spEvent->setHandlerType(ReadEvent);
 		spReactor_->addHandler(spEvent);
 	}
 	void errorHandler() override
@@ -41,15 +40,9 @@ public:
 		return sock_;
 	}
 private:
-	void onConnect()
-	{
-
-	}
 private:
 	int sock_;
 	ReactorPtr spReactor_;
-	std::function<void(std::shared_ptr<ConnectSession>)> addConnectFunc_;
-	
 };
 class Connecter: public ThreadLocalManager
 {
@@ -68,7 +61,7 @@ public:
 			Socket sock;
 			sock.connect(address_);
 			sock.setNonblock();
-			EventHandlerPtr spEvent = std::make_shared<ConnectHandler<NomalEventHandler> >(sock.GetSockFd(), spReactor_, std::bind(&Connecter::addConnection, this, std::placeholders::_1));
+			EventHandlerPtr spEvent = std::make_shared<ConnectHandler<NormalEventHandler> >(sock.getSockFd(), spReactor_, std::bind(&Connecter::addConnection, this, std::placeholders::_1));
 			spEvent->setHandlerType(WriteEvent);
 			spReactor_->addHandler(spEvent);
 		}
@@ -101,7 +94,7 @@ public:
 		//Socket sock;
 		//sock.setNonblock();
 		//sock.connect(address);
-		//EventHandlerPtr spEvent = std::make_shared<ConnectHandler<NomalEventHandler> >(sock.GetSockFd(), spReactor_);
+		//EventHandlerPtr spEvent = std::make_shared<ConnectHandler<NormalEventHandler> >(sock.GetSockFd(), spReactor_);
 		//spEvent->setHandlerType(WriteEvent);
 		//spReactor_->addHandler(spEvent);
 		//auto spTimeTEvent = std::make_shared<TimeEvent>(std::bind(&ConnectThread::sendHeartBeat, this));
@@ -139,6 +132,4 @@ private:
 	size_t connectionNum_;
 	std::map<int, std::shared_ptr<ConnectSession> > connnectSessions_;
 	std::vector<std::pair<Address, int>> connectConf_;
-	
-
 };

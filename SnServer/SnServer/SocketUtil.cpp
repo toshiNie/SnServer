@@ -48,5 +48,4 @@ namespace socketutil
 		iov[1].iov_len = size2;
 		return ::readv(fd, iov, 2);
 	}
-
 }

@@ -109,7 +109,7 @@ public:
 		if (isWrite_)
 		{
 			ss_ = std::unique_ptr<std::stringstream> (new std::stringstream);
-			*ss_ << NsTime::GetStrTimeStamp() << ' ' << levelToString(level) << ' ' << std::this_thread::get_id() << ' ';
+			*ss_ << SnTime::getStrTimeStamp() << ' ' << levelToString(level) << ' ' << std::this_thread::get_id() << ' ';
 		}
 	}
 	template<typename T>

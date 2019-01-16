@@ -21,7 +21,7 @@ private:
 	std::mutex& mutex_;
 };
 
-class ReadThread;
+class LoopThread;
 class Reactor : public noncopyable
 {
 	using HandlerMap = std::unordered_map<int, EventHandlerPtr>;

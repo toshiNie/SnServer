@@ -3,7 +3,7 @@
 #include"Session.h"
 
 
-class NomalEventHandler : public EventHandler
+class NormalEventHandler : public EventHandler
 {
 	enum { READ_SIZE = 1024 };
 public:
@@ -14,7 +14,7 @@ public:
 	//typedef std::shared_ptr<SessionType> ConnectSessionPtr;
 
 public:
-	NomalEventHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor);
+	NormalEventHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor);
 	void readHandler() override;
 	void writeHandler() override;
 	void errorHandler() override;

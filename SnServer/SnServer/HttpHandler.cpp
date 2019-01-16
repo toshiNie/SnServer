@@ -5,14 +5,14 @@
 #include"Socket.h"
 #include"SocketUtil.h"
 #include"Session.h"
-#include"ReadThread.h"
+#include"LoopThread.h"
 #include "Session.h"
 #include"HttpParser.h"
 #include"HttpHandler.h"
 
 
 
-HttpNormalHandler::HttpNormalHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor) :NomalEventHandler(spConnect, spReactor), spHttpConnect_(spConnect)
+HttpNormalHandler::HttpNormalHandler(ConnectSessionPtr spConnect, ReactorPtr spReactor) :NormalEventHandler(spConnect, spReactor), spHttpConnect_(spConnect)
 {
 
 }
