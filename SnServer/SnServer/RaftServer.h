@@ -32,14 +32,20 @@ struct LogEntry
 };
 struct NodeInfo
 {
+	enum NodeFlag
+	{
+		NodeVotedForMe = 0x01, //该节点给自己投票了
+		NodeVoting = 0x02,     //该节点有投票权
+		NodeHasSufficientLog = 0x04 // 
+	};
 	void *udate;
 	//对于每一个服务器，需要发送给他的下一个日志条目的索引值（初始化为领导人最后索引值加一）
 	int nextIndex;
 	//对于每一个服务器，已经复制给他的日志的最高索引值
 	int matchIndex;
-	//有三种取值，是相或的关系 1:该机器有给我投票 2:该机器有投票权  3: 该机器有最新的日志
+	//Flag -> NodeFlag
 	int flags;
-	//机器对应的id值，这个每台机器在全局都是唯一的
+	//机器id
 	int id;
 };
 
@@ -76,11 +82,13 @@ public:
 	void becomeCandidate()
 	{
 		currentTerm_++;
+
 		for (auto& node : nodes_)
 		{
-			//给自己投票
+			node.second.flags &= ~ NodeInfo::NodeVotedForMe;
 		}
-		//给自己投票 todo
+
+		voteFor_ = selfInfo_.id;
 
 		currentLeader_ = nullptr;
 
@@ -96,17 +104,19 @@ public:
 
 	void onRecvRequestVote(NodeInfo* node, const RequestVote& request)
 	{
+		//如果自己的term小于对方的term,证明自己过时了(可能是网络耗时较长),更新为对方的term, 变为follower
 		if (currentTerm_ < request.term)
 		{
 			currentTerm_ = request.term;
-			// become raft;
+			state_ = State::Follower;
+			return;
 		}
+
 		VoteResponse response;
 		if (checkShouldGrantVote(request)) //需要投票
 		{
 			voteFor_ = request.candidateId;
 			response.voteGranted = 1;
-
 			currentLeader_ = nullptr;
 			timeoutElapsed_ = 0;
 		}
@@ -116,31 +126,34 @@ public:
 		}
 
 		response.term = currentTerm_;
-		//send response back
+		//todo send response back 
 	}
 
 	bool checkShouldGrantVote(const RequestVote& request)
 	{
+		//投票请求过时
 		if (request.term < currentTerm_)
 		{
 			return false;
 		}
-		if (voteFor_ != 0)
+		// 已经投过票了
+		if (voteFor_ != -1)
 		{
 			return false;
 		}
-		int currentIndex = logEntrys_[logEntrys_.size() - 1]->index;
-		if (currentIndex == 0)
+		//获取当前的日志index
+		if (logEntrys_.empty())
 		{
 			return true;
 		}
-
 		auto& logEntry = logEntrys_[logEntrys_.size() - 1];
-		if (logEntry->term < request.lastLogTerm)
+		//理想情况 
+		if (logEntry.term < request.lastLogTerm)
 		{
 			return true;
 		}
-		if (logEntry->term == request.lastLogTerm && currentIndex <= request.lastLogIndex)
+		//如果任期相等但是对方日志更新(自己也是候选者?)
+		if (logEntry.term == request.lastLogTerm && logEntrys_.size() - 1  <= request.lastLogIndex)
 		{
 			return true;
 		}
@@ -153,6 +166,7 @@ public:
 		{
 			return false;
 		}
+
 		//收到的返回term比自己大, 恢复Follower
 		if (response.term > currentTerm_)
 		{
@@ -160,19 +174,28 @@ public:
 			state_ = State::Follower;
 			return false;
 		}
+
 		//过时的response
 		else if (response.term < currentTerm_)
 		{
 			return 0;
 		}
+
 		//被投票了
 		if (response.voteGranted == 1)
 		{
-			nodes_[node->id].flags |= 0x01;
+			nodes_[node->id].flags |= NodeInfo::NodeVotedForMe;
 			voteNum_++;
 			if (voteNum_ > nodes_.size() / 2)
 			{
-				//become leader todo
+				state_ = State::Leader;
+				voteNum_ = 0;
+				for (auto & node : nodes_)
+				{
+					node.second.nextIndex = logEntrys_.size();
+					node.second.matchIndex = 0;
+					sendAppendEntries(&node.second);
+				}
 				return true;
 			}
 
@@ -212,15 +235,15 @@ public:
 	bool onRecvAppendEntries(NodeInfo *node, const AppendEntries& request)
 	{
 		requestTimeout_ = 0;
-		AppendEntriesRespanse response;
+		AppendEntriesResponse response;
 		response.term = currentTerm_;
 		//如果自己是  候选者 并且收到了term和自己相等的请求, 说明有人成了Leader, 变为Follower
-		if (state_ == State::Candidate && currentTerm_ == request.term)
+		if (state_ == State::Candidate && currentTerm_  <= request.term)
 		{
 			voteFor_ = -1;
 			state_ = State::Follower;
 		}
-		//term < leader
+		//term < leader.term
 		if (currentTerm_ < request.term)
 		{
 			currentTerm_ = request.term;
@@ -300,6 +323,59 @@ public:
 		response.firstIndex = 0;
 		return -1;
 		//Sendback
+	}
+	bool onRecvAppendEntriesResponse(NodeInfo *node, const AppendEntriesResponse& response)
+	{
+		//过时的回复
+		if (response.currentIndex != 0 && response.currentIndex <= node->matchIndex)
+		{
+			return true;
+		}
+		//自己不是Leader
+		if (state_ != State::Leader)
+		{
+			return false;
+		}
+		//自己是个过时的Leader, 转化为Follower
+		if (currentTerm_ < response.term)
+		{
+			currentTerm_ = response.term;
+			state_ = State::Follower;
+			return true;
+		}
+		else if (currentTerm_ > response.term)
+		{
+			return true;
+		}
+
+		if (response.success == 0)
+		{
+			int nextIndex = node->nextIndex;
+			if (logEntrys_.size() < nextIndex)
+			{
+				node->nextIndex = min(response.currentIndex + 1, logEntrys_.size() -1);
+			}
+			else
+			{
+				node->nextIndex = nextIndex - 1;
+			}
+			//resend AppendEntries todo
+		}
+
+		node->nextIndex = response.currentIndex + 1;
+		node->matchIndex = response.currentIndex;
+
+		if (node->flags & 0x02 == 0 && votingCfgChangeLogIndex_ == -1
+			&& logEntrys_.size() < response.currentIndex + 1
+			)
+		{
+
+		}
+
+		int votes = 1;
+		int point = response.currentIndex;
+		int i = 0;
+		for(;)
 	}
 
 

@@ -58,7 +58,7 @@ struct AppendEntries
 	LogEntry* entries;
 };
 
-struct AppendEntriesRespanse
+struct AppendEntriesResponse
 {
 	//当前任期号
 	int term;
